@@ -20,7 +20,7 @@ def randomgame(bot, update):
     update.message.reply_text("GG "+ random.choice(games))
     
 def roll(bot, update):
-    update.message.reply_text("GG "+ str(randint(0,100))
+    update.message.reply_text("GG "+ str(randint(0,100)))
 
 def isEnglish(text):
     countEnglishLetters = 0
