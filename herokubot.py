@@ -11,8 +11,6 @@ def start(bot, update):
 def randomgame(bot, update):
     update.effective_message.reply_text("GG R6")
 
-def roll(bot, update):
-    update.effective_message.reply_text("GG " + str(randint(0, 100)))	
 
 def echo(bot, update):
     #update.effective_message.reply_text(update.effective_message.text)
@@ -23,7 +21,7 @@ def error(bot, update, error):
 
 if __name__ == "__main__":
     # Set these variable to the appropriate values
-    TOKEN = "787502648:AAHKIPGmNuQF3Q4iIgJUSPrqFOBGyyZ6bTY"
+    TOKEN = "779665298:AAHkVV9-hwZ_NZhiM6iXXhj77BGzJ2IBoHw"
     NAME = "gg-manager-bot"
 
     # Port is given by Heroku
@@ -45,9 +43,9 @@ if __name__ == "__main__":
     dp.add_error_handler(error)
 
     # Start the webhook
-    #updater.start_webhook(listen="0.0.0.0",port=int(PORT),url_path=TOKEN)
-    #updater.bot.setWebhook("https://{}.herokuapp.com/{}".format(NAME, TOKEN))
+    updater.start_webhook(listen="0.0.0.0",port=int(PORT),url_path=TOKEN)
+    updater.bot.setWebhook("https://{}.herokuapp.com/{}".format(NAME, TOKEN))
 	
 	# Start the Bot
-    updater.start_polling()
+    #updater.start_polling()
     updater.idle()
