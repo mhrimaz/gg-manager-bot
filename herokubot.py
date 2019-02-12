@@ -1,18 +1,21 @@
 import logging
 import os
+import random
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 from random import randint
 
+games = ['R6', 'RL', 'Apex', '''Don't play FoxHole!''']
+
 def start(bot, update):
     update.message.reply_text("GG ?")
 
 def randomgame(bot, update):
-    update.message.reply_text("GG R6")
+    update.message.reply_text("GG "+ random.choice(games))
     
 def roll(bot, update):
-    update.message.reply_text("GG "+str(randint(0,100))
+    update.message.reply_text("GG "+ str(randint(0,100))
 
 
 #def echo(bot, update):
