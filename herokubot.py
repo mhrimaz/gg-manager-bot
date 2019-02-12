@@ -17,7 +17,7 @@ def error(bot, update, error):
 
 if __name__ == "__main__":
     # Set these variable to the appropriate values
-    TOKEN = "787502648:AAHKIPGmNuQF3Q4iIgJUSPrqFOBGyyz6bTY"
+    TOKEN = "787502648:AAHKIPGmNuQF3Q4iIgJUSPrqFOBGyyZ6bTY"
     NAME = "gg-manager-bot"
 
     # Port is given by Heroku
