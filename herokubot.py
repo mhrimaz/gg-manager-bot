@@ -27,13 +27,28 @@ def isEnglish(text):
     for c in text:
         if ord(c) < 128 and c.isalpha():
             countEnglishLetters += 1
-    print(countEnglishLetters/len(text))
     return countEnglishLetters/len(text) >0.5
 
 def processText(bot, update):
-    print(update.effective_user)
-    logger.debug('user name'+ update.effective_user)   
-
+    logger.debug('user name'+ update.effective_user) 
+    user = update.effective_user
+    username = user['username']
+    logger.debug('user name'+ username) 
+    logger.debug('update.message.text '+ update.message.text + 'isenglish: '+isEnglish(update.message.text))     
+    if isEnglish(update.message.text):
+        englishCount[username] = englishCount.setdefault(username, 0) + 1
+    logger.debug('englishCount '+str(englishCount))  
+    
+    
+    timenow = time.time()
+    hours, rem = divmod(timecur-timenow, 3600)
+    if(hours>5):
+        timecur = timenow
+        stickerCount = {}
+        englishCount = {}
+    
+    if(englishCount[username]>10):
+        bot.delete_message(update.message.chat.id, update.message.message_id)
     
     #update.effective_message.reply_text(update.effective_message.text)
 
