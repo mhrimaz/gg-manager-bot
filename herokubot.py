@@ -10,6 +10,9 @@ def start(bot, update):
 
 def randomgame(bot, update):
     update.message.reply_text("GG R6")
+    
+def roll(bot, update):
+    update.message.reply_text("GG "+str(randint(0,100))
 
 
 #def echo(bot, update):
@@ -36,9 +39,9 @@ if __name__ == "__main__":
     dp = updater.dispatcher
     # Add handlers
     dp.add_handler(CommandHandler('start', start))
-    #dp.add_handler(CommandHandler('roll', roll))
+    dp.add_handler(CommandHandler('roll', roll))
     dp.add_handler(CommandHandler('randomgame', randomgame))
-    
+	
     dp.add_error_handler(error)
 
     # Start the webhook
