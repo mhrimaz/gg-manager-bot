@@ -32,18 +32,12 @@ def isEnglish(text):
 
 def processText(bot, update):
     username = update.message.user.username
+    logger.debug('user name'+ username) 
+    logger.debug('update.message.text '+ update.message.text + 'isenglish: '+isEnglish(update.message.text))     
     if isEnglish(update.message.text):
         englishCount[username] = englishCount.setdefault(username, 0) + 1
-        
-    timenow = time.time()
-    hours, rem = divmod(timecur-timenow, 3600)
-    if(hours>5):
-        timecur = timenow
-        stickerCount = {}
-        englishCount = {}
-    
-    if(englishCount[username]>10):
-        bot.delete_message(update.message.chat.id, update.message.message_id)
+    logger.debug('englishCount '+str(englishCount))     
+
     
     #update.effective_message.reply_text(update.effective_message.text)
 
