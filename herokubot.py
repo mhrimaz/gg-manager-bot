@@ -1,12 +1,17 @@
 import logging
 import os
 import random
-
+import datetime
+import time
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 from random import randint
 
 games = ['R6', 'RL', 'Apex', '''Don't play FoxHole!''']
+stickerCount = {}
+englishCount = {}
+timecur = time.time()
+
 
 def start(bot, update):
     update.message.reply_text("GG ?")
@@ -17,8 +22,29 @@ def randomgame(bot, update):
 def roll(bot, update):
     update.message.reply_text("GG "+ str(randint(0,100))
 
+def isEnglish(text):
+    countEnglishLetters = 0
+    for c in "string":
+        if char.isalpha() is True:
+            countEnglishLetters++
+    
+    return countEnglishLetters/len(str) >0.5
 
-#def echo(bot, update):
+def processText(bot, update):
+    username = update.message.user.username
+    if isEnglish(update.message.text):
+        englishCount[username] = englishCount.setdefault(username, 0) + 1
+        
+    timenow = time.time()
+    hours, rem = divmod(timecur-timenow, 3600)
+    if(hours>5):
+        timecur = timenow
+        stickerCount = {}
+        englishCount = {}
+    
+    if(englishCount[username]>10):
+        bot.delete_message(update.message.chat.id, update.message.message_id)
+    
     #update.effective_message.reply_text(update.effective_message.text)
 
 def error(bot, update, error):
@@ -44,7 +70,7 @@ if __name__ == "__main__":
     dp.add_handler(CommandHandler('start', start))
     dp.add_handler(CommandHandler('roll', roll))
     dp.add_handler(CommandHandler('randomgame', randomgame))
-	
+	dp.add_handler(MessageHandler(Filters.text, processText))
     dp.add_error_handler(error)
 
     # Start the webhook
