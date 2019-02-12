@@ -7,9 +7,14 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 def start(bot, update):
     update.effective_message.reply_text("GG ?")
 
+def randomgame(bot, update):
+    update.effective_message.reply_text("GG R6")
+
+def roll(bot, update):
+    update.effective_message.reply_text("GG ?")	
 
 def echo(bot, update):
-    update.effective_message.reply_text(update.effective_message.text)
+    #update.effective_message.reply_text(update.effective_message.text)
 
 def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"', update, error)
@@ -33,7 +38,9 @@ if __name__ == "__main__":
     dp = updater.dispatcher
     # Add handlers
     dp.add_handler(CommandHandler('start', start))
-    dp.add_handler(MessageHandler(Filters.text, echo))
+	#dp.add_handler(CommandHandler('roll', roll))
+	dp.add_handler(CommandHandler('randomgame', randomgame))
+    #dp.add_handler(MessageHandler(Filters.text, echo))
     dp.add_error_handler(error)
 
     # Start the webhook
