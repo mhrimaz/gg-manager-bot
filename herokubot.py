@@ -28,7 +28,7 @@ def isEnglish(text):
         if c.isalpha() is True:
             countEnglishLetters += 1
     
-    return countEnglishLetters/len(str) >0.5
+    return countEnglishLetters/len(text) >0.5
 
 def processText(bot, update):
     print(update.effective_user)
