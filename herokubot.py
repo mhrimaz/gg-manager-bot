@@ -25,9 +25,9 @@ def roll(bot, update):
 def isEnglish(text):
     countEnglishLetters = 0
     for c in text:
-        if c.isalpha() is True:
+        if ord(c) < 128 and c.isalpha():
             countEnglishLetters += 1
-    
+    print(countEnglishLetters/len(text))
     return countEnglishLetters/len(text) >0.5
 
 def processText(bot, update):
