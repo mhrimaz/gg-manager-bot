@@ -31,7 +31,7 @@ def isEnglish(text):
     return countEnglishLetters/len(str) >0.5
 
 def processText(bot, update):
-    username = update.from_user.username
+    username = update.message.from_user.username
     logger.debug('user name'+ username) 
     logger.debug('update.message.text '+ update.message.text + 'isenglish: '+isEnglish(update.message.text))     
     if isEnglish(update.message.text):
