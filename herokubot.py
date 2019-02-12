@@ -24,8 +24,8 @@ def roll(bot, update):
 
 def isEnglish(text):
     countEnglishLetters = 0
-    for c in "string":
-        if char.isalpha() is True:
+    for c in text:
+        if c.isalpha() is True:
             countEnglishLetters += 1
     
     return countEnglishLetters/len(str) >0.5
