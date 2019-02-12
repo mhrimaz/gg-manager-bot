@@ -61,6 +61,9 @@ if __name__ == "__main__":
     TOKEN = os.environ.get('TOKEN')
     NAME = "gg-manager-bot"
 
+    stickerCount = {}
+    englishCount = {}
+
     # Port is given by Heroku
     PORT = os.environ.get('PORT')
 
