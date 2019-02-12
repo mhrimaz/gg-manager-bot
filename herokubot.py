@@ -51,7 +51,7 @@ def processText(bot, update):
         stickerCount = {}
         englishCount = {}
     
-    if(englishCount[username]>10):
+    if(englishCount.setdefault(username, 0)>10):
         bot.delete_message(update.message.chat.id, update.message.message_id)
     
     #update.effective_message.reply_text(update.effective_message.text)
