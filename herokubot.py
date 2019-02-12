@@ -6,10 +6,10 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from random import randint
 
 def start(bot, update):
-    update.effective_message.reply_text("GG ?")
+    update.message.reply_text("GG ?")
 
 def randomgame(bot, update):
-    update.effective_message.reply_text("GG R6")
+    update.message.reply_text("GG R6")
 
 
 def echo(bot, update):
