@@ -30,6 +30,10 @@ def isEnglish(text):
     return countEnglishLetters/len(text) >0.5
 
 def processText(bot, update):
+    global stickerCount
+    global englishCount
+    global timecur
+    
     logger.debug('user name'+ str(update.effective_user)) 
     user = update.effective_user
     username = user['username']
@@ -61,8 +65,6 @@ if __name__ == "__main__":
     TOKEN = os.environ.get('TOKEN')
     NAME = "gg-manager-bot"
 
-    stickerCount = {}
-    englishCount = {}
 
     # Port is given by Heroku
     PORT = os.environ.get('PORT')
