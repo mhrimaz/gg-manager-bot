@@ -7,11 +7,13 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 from random import randint
 
-games = ['R6', 'RL', 'Apex', '''Don't play FoxHole!''']
+games = ['R6','R6','R6', 'RL', 'RL', 'RL', 'Apex']
 stickerCount = {}
 englishCount = {}
-timecur = time.time()
+baseClockForEnglish = time.time()
 
+individualBaseClockForSticker = {}
+baseClockForEnglish = time.time()
 
 def start(bot, update):
     update.message.reply_text("GG ?")
@@ -30,33 +32,34 @@ def isEnglish(text):
     return countEnglishLetters/len(text) >0.5
 
 def processText(bot, update):
-    global stickerCount
     global englishCount
-    global timecur
+    global baseClockForEnglish
     
-    logger.debug('user name'+ str(update.effective_user)) 
+    
     user = update.effective_user
     username = user['username']
     print('user name'+ str(username)) 
     print('update.message.text '+ update.message.text + 'isenglish: '+str(isEnglish(update.message.text)))     
     if isEnglish(update.message.text):
         englishCount[username] = englishCount.setdefault(username, 0) + 1
-    logger.debug('englishCount '+str(englishCount))  
+    
     
     
     timenow = time.time()
-    temp = timenow-timecur
+    temp = timenow-baseClockForEnglish
     hours = temp//3600
     if(hours>5):
-        timecur = timenow
-        stickerCount = {}
+        baseClockForEnglish = timenow
         englishCount = {}
     
-    if(englishCount.setdefault(username, 0)>10):
+    if(englishCount.setdefault(username, 0)>10) and isEnglish(update.message.text):
         bot.delete_message(update.message.chat.id, update.message.message_id)
     
     #update.effective_message.reply_text(update.effective_message.text)
 
+def processSticker(bot, update):
+    print("sticker update"+str(update))
+    
 def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"', update, error)
 
@@ -82,6 +85,8 @@ if __name__ == "__main__":
     dp.add_handler(CommandHandler('roll', roll))
     dp.add_handler(CommandHandler('randomgame', randomgame))
     dp.add_handler(MessageHandler(Filters.text, processText))
+    dp.add_handler(MessageHandler(Filters.sticker, processSticker))
+    
     dp.add_error_handler(error)
 
     # Start the webhook
