@@ -4,7 +4,7 @@ import random
 import datetime
 import time
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, BaseFilter
-
+from telegram import Message, User, Chat, MessageEntity, Document
 from random import randint
 
 games = ['R6','R6','R6', 'RL', 'RL', 'RL', 'Apex']
