@@ -56,25 +56,8 @@ def processText(bot, update):
     
 
 def processSticker(bot, update):
-    global stickerCount
-    global baseClock
-    print("sticker update"+str(update))
-    
-    user = update.effective_user
-    username = user['username']
-    
-    stickerCount[username] = stickerCount.setdefault(username, 0) + 1
-    
-    
-    timenow = time.time()
-    temp = timenow-baseClock
-    hours = temp//3600
-    if(hours>5):
-        baseClock = timenow
-        stickerCount = {}
-        
-    if(englishCount.setdefault(username, 0)>5):
-        bot.delete_message(update.message.chat.id, update.message.message_id)
+
+    bot.delete_message(update.message.chat.id, update.message.message_id)
     
 def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"', update, error)
