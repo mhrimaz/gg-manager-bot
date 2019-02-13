@@ -37,15 +37,16 @@ def processText(bot, update):
     logger.debug('user name'+ str(update.effective_user)) 
     user = update.effective_user
     username = user['username']
-    logger.debug('user name'+ str(username)) 
-    logger.debug('update.message.text '+ update.message.text + 'isenglish: '+str(isEnglish(update.message.text)))     
+    print('user name'+ str(username)) 
+    print('update.message.text '+ update.message.text + 'isenglish: '+str(isEnglish(update.message.text)))     
     if isEnglish(update.message.text):
         englishCount[username] = englishCount.setdefault(username, 0) + 1
     logger.debug('englishCount '+str(englishCount))  
     
     
     timenow = time.time()
-    hours, rem = divmod(timecur-timenow, 3600)
+    temp = timenow-timecur
+    hours = temp//3600
     if(hours>5):
         timecur = timenow
         stickerCount = {}
