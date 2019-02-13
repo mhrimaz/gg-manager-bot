@@ -10,10 +10,8 @@ from random import randint
 games = ['R6','R6','R6', 'RL', 'RL', 'RL', 'Apex']
 stickerCount = {}
 englishCount = {}
-baseClockForEnglish = time.time()
+baseClock = time.time()
 
-individualBaseClockForSticker = {}
-baseClockForEnglish = time.time()
 
 def start(bot, update):
     update.message.reply_text("GG ?")
@@ -33,8 +31,8 @@ def isEnglish(text):
 
 def processText(bot, update):
     global englishCount
-    global baseClockForEnglish
-    
+    global baseClock
+    print("new Text Upate : "+update)
     
     user = update.effective_user
     username = user['username']
@@ -46,19 +44,37 @@ def processText(bot, update):
     
     
     timenow = time.time()
-    temp = timenow-baseClockForEnglish
+    temp = timenow-baseClock
     hours = temp//3600
     if(hours>5):
-        baseClockForEnglish = timenow
+        baseClock = timenow
         englishCount = {}
     
     if(englishCount.setdefault(username, 0)>10) and isEnglish(update.message.text):
         bot.delete_message(update.message.chat.id, update.message.message_id)
     
-    #update.effective_message.reply_text(update.effective_message.text)
+    
 
 def processSticker(bot, update):
+    global stickerCount
+    global baseClock
     print("sticker update"+str(update))
+    
+    user = update.effective_user
+    username = user['username']
+    
+    stickerCount[username] = stickerCount.setdefault(username, 0) + 1
+    
+    
+    timenow = time.time()
+    temp = timenow-baseClock
+    hours = temp//3600
+    if(hours>5):
+        baseClock = timenow
+        stickerCount = {}
+        
+    if(englishCount.setdefault(username, 0)>5):
+        bot.delete_message(update.message.chat.id, update.message.message_id)
     
 def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"', update, error)
@@ -84,8 +100,8 @@ if __name__ == "__main__":
     dp.add_handler(CommandHandler('start', start))
     dp.add_handler(CommandHandler('roll', roll))
     dp.add_handler(CommandHandler('randomgame', randomgame))
-    dp.add_handler(MessageHandler(Filters.text, processText))
-    dp.add_handler(MessageHandler(Filters.sticker, processSticker))
+    dp.add_handler(MessageHandler((Filters.text & (~ Filters.entity(MENTION))), processText))
+    dp.add_handler(MessageHandler((Filters.sticker & Filters.animation), processSticker))
     
     dp.add_error_handler(error)
 
