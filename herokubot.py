@@ -3,7 +3,7 @@ import os
 import random
 import datetime
 import time
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, BaseFilter
 
 from random import randint
 
@@ -100,7 +100,7 @@ if __name__ == "__main__":
     dp.add_handler(CommandHandler('start', start))
     dp.add_handler(CommandHandler('roll', roll))
     dp.add_handler(CommandHandler('randomgame', randomgame))
-    dp.add_handler(MessageHandler((Filters.text & (~ Filters.entity(MENTION))), processText))
+    dp.add_handler(MessageHandler((Filters.text & (~ Filters.entity(MessageEntity.MENTION))), processText))
     dp.add_handler(MessageHandler((Filters.sticker & Filters.animation), processSticker))
     
     dp.add_error_handler(error)
