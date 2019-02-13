@@ -32,7 +32,7 @@ def isEnglish(text):
 def processText(bot, update):
     global englishCount
     global baseClock
-    print("new Text Upate : "+update)
+    print("new Text Upate : "+str(update))
     
     user = update.effective_user
     username = user['username']
