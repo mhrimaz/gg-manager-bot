@@ -83,6 +83,8 @@ def antiFlood(bot, update):
     global msgCount
     global floodClock
 
+    print("All Filter update"+str(update))
+
     user = update.effective_user
     username = user['username']
     msgCount[username] = msgCount.setdefault(username, 0) + 1
