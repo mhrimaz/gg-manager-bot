@@ -142,7 +142,7 @@ if __name__ == "__main__":
     dp.add_handler(MessageHandler((Filters.text & (~ Filters.entity(MessageEntity.MENTION))), processText, edited_updates=True), 2)
     dp.add_handler(MessageHandler((Filters.sticker | Filters.animation), processSticker), 2)
     dp.add_handler(MessageHandler(Filters.all, antiFlood, edited_updates=True),1)
-    dp.addHandler(MessageHandler(Filters.command, unknown,edited_updates=True),4)
+    dp.add_Handler(MessageHandler(Filters.command, unknown,edited_updates=True),4)
     dp.add_error_handler(error)
 
     # Start the webhook
