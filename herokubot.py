@@ -10,20 +10,28 @@ from random import randint
 games = ['R6','R6','R6', 'RL', 'RL', 'RL', 'Apex']
 stickerCount = {}
 englishCount = {}
-baseClock = time.time()
 msgCount = {}
 floodStat = {}
-floodClock = time.time()
+
+baseClock_5hour = time.time()
+baseClock_2sec = time.time()
+baseClock_30min = time.time()
+
+
+
+def unknown(bot, update):
+    bot.delete_message(update.effective_message.chat.id, update.effective_message.message_id)
+
 
 
 def start(bot, update):
-    update.message.reply_text("GG ?")
+    update.effective_message.reply_text("GG ?")
 
 def randomgame(bot, update):
-    update.message.reply_text("GG "+ random.choice(games))
+    update.effective_message.reply_text("GG "+ random.choice(games))
     
 def roll(bot, update):
-    update.message.reply_text("GG "+ str(randint(0,100)))
+    update.effective_message.reply_text("GG "+ str(randint(0,100)))
 
 def isEnglish(text):
     countEnglishLetters = 0
@@ -34,34 +42,33 @@ def isEnglish(text):
 
 def processText(bot, update):
     global englishCount
-    global baseClock
-    print("new Text Upate : "+str(update))
+    global baseClock_5hour
     
     user = update.effective_user
     username = user['username']
-    print('user name'+ str(username)) 
-    print('update.message.text '+ update.message.text + 'isenglish: '+str(isEnglish(update.message.text)))     
-    if isEnglish(update.message.text):
+    
+    if isEnglish(update.effective_message.text):
         englishCount[username] = englishCount.setdefault(username, 0) + 1
     
     
     
     timenow = time.time()
-    temp = timenow-baseClock
+    temp = timenow-baseClock_5hour
     hours = temp//3600
     if(hours>5):
-        baseClock = timenow
+        baseClock_5hour = timenow
         englishCount = {}
+        return
     
-    if(englishCount.setdefault(username, 0)>10) and isEnglish(update.message.text):
-        bot.delete_message(update.message.chat.id, update.message.message_id)
+    if(englishCount.setdefault(username, 0)>10) and isEnglish(update.effective_message.text):
+        bot.delete_message(update.effective_message.chat.id, update.effective_message.message_id)
     
     
 
 def processSticker(bot, update):
     global stickerCount
-    global baseClock
-    print("sticker update"+str(update))
+    global baseClock_5hour
+    print("sticker update "+str(update))
     
     user = update.effective_user
     username = user['username']
@@ -70,20 +77,21 @@ def processSticker(bot, update):
     
     
     timenow = time.time()
-    temp = timenow-baseClock
+    temp = timenow-baseClock_5hour
     hours = temp//3600
     if(hours>5):
-        baseClock = timenow
+        baseClock_5hour = timenow
         stickerCount = {}
         
     if(englishCount.setdefault(username, 0)>5):
-        bot.delete_message(update.message.chat.id, update.message.message_id)
+        bot.delete_message(update.effective_message.chat.id, update.effective_message.message_id)
 
 def antiFlood(bot, update):
     global msgCount
-    global floodClock
-
-    print("All Filter update"+str(update))
+    global baseClock_2sec
+    global baseClock_30min
+    
+    print("All Filter update "+str(update))
 
     user = update.effective_user
     username = user['username']
@@ -91,24 +99,18 @@ def antiFlood(bot, update):
 
     timenow = time.time()
 
-    temp = timenow - floodClock
-    if(temp < 10 and msgCount.setdefault(username, 0) > 10 ):
-        bot.delete_message(update.message.chat.id, update.message.message_id)
+    temp = timenow - baseClock_2sec
+    if(temp > 2 and msgCount.setdefault(username, 0) > 10 ):
+        baseClock_2sec = time.time()
         floodStat[username] = True
 
-    if(temp > 10):
-        floodClock = time.time()
-        floodStat[username] = False
-        msgCount[username] = 0
-
-
-
-
-
-
-
-
-    
+    if((timenow - baseClock_30min)//60)>30):
+        floodStat = {}
+        msgCount[username]
+        
+    if(floodStat.setdefault(username, False) ):
+        bot.delete_message(update.effective_message.chat.id, update.effective_message.message_id)
+        
 
     
 def error(bot, update, error):
@@ -138,7 +140,7 @@ if __name__ == "__main__":
     dp.add_handler(MessageHandler((Filters.text & (~ Filters.entity(MessageEntity.MENTION))), processText, edited_updates=True), 2)
     dp.add_handler(MessageHandler((Filters.sticker | Filters.animation), processSticker), 2)
     dp.add_handler(MessageHandler(Filters.all, antiFlood, edited_updates=True),1)
-    
+    dp.addHandler(MessageHandler(Filters.command, unknown,edited_updates=True),4)
     dp.add_error_handler(error)
 
     # Start the webhook
