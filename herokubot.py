@@ -83,6 +83,8 @@ def antiFlood(bot, update):
     global msgCount
     global floodClock
 
+    print("All Filter update"+str(update))
+
     user = update.effective_user
     username = user['username']
     msgCount[username] = msgCount.setdefault(username, 0) + 1
@@ -135,7 +137,7 @@ if __name__ == "__main__":
     dp.add_handler(CommandHandler('randomgame', randomgame))
     dp.add_handler(MessageHandler((Filters.text & (~ Filters.entity(MessageEntity.MENTION))), processText))
     dp.add_handler(MessageHandler((Filters.sticker | Filters.animation), processSticker))
-    dp.add_handler(MessageHandler(antiFlood))
+    dp.add_handler(MessageHandler(Filters.all, antiFlood))
     
     dp.add_error_handler(error)
 
