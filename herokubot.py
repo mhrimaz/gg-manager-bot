@@ -90,6 +90,7 @@ def antiFlood(bot, update):
     global msgCount
     global baseClock_2sec
     global baseClock_30min
+    global floodStat
     
     print("All Filter update "+str(update))
 
