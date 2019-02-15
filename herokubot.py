@@ -11,6 +11,9 @@ games = ['R6','R6','R6', 'RL', 'RL', 'RL', 'Apex']
 stickerCount = {}
 englishCount = {}
 baseClock = time.time()
+msgCount = {}
+floodStat = {}
+floodClock = time.time()
 
 
 def start(bot, update):
@@ -75,6 +78,36 @@ def processSticker(bot, update):
         
     if(englishCount.setdefault(username, 0)>5):
         bot.delete_message(update.message.chat.id, update.message.message_id)
+
+def antiFlood(bot, update):
+    global msgCount
+    global floodClock
+
+    user = update.effective_user
+    username = user['username']
+    msgCount[username] = msgCount.setdefault(username, 0) + 1
+
+    timenow = time.time()
+
+    temp = timenow - floodClock
+    if(temp < 10 and msgCount.setdefault(username, 0) > 10 ):
+        bot.delete_message(update.message.chat.id, update.message.message_id)
+        floodStat[username] = True
+
+    if(temp > 10):
+        floodClock = time.time()
+        floodStat[username] = False
+        msgCount[username] = 0
+
+
+
+
+
+
+
+
+    
+
     
 def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"', update, error)
@@ -102,6 +135,7 @@ if __name__ == "__main__":
     dp.add_handler(CommandHandler('randomgame', randomgame))
     dp.add_handler(MessageHandler((Filters.text & (~ Filters.entity(MessageEntity.MENTION))), processText))
     dp.add_handler(MessageHandler((Filters.sticker | Filters.animation), processSticker))
+    dp.add_handler(MessageHandler(antiFlood))
     
     dp.add_error_handler(error)
 
