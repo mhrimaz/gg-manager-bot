@@ -103,13 +103,13 @@ def antiFlood(bot, update):
     temp = timenow - baseClock_2sec
     if(temp > 2):
         baseClock_2sec = time.time()
+        if (msgCount.setdefault(username, 0) > 20):
+            floodStat[username] = True
         
-    if (msgCount.setdefault(username, 0) > 5):
-        floodStat[username] = True
     if(((timenow - baseClock_30min)//60)>30):
         baseClock_30min = time.time()
         floodStat = {}
-        msgCount[username]
+        msgCount[username] = 0
         
     if(floodStat.setdefault(username, False) ):
         bot.delete_message(update.effective_message.chat.id, update.effective_message.message_id)
