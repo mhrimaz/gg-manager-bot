@@ -104,7 +104,7 @@ def antiFlood(bot, update):
     if(temp > 2):
         baseClock_2sec = time.time()
         
-    if (msgCount.setdefault(username, 0) > 10):
+    if (msgCount.setdefault(username, 0) > 5):
         floodStat[username] = True
     if(((timenow - baseClock_30min)//60)>30):
         baseClock_30min = time.time()
