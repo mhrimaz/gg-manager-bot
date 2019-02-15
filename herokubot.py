@@ -135,7 +135,7 @@ if __name__ == "__main__":
     dp.add_handler(CommandHandler('randomgame', randomgame))
     dp.add_handler(MessageHandler((Filters.text & (~ Filters.entity(MessageEntity.MENTION))), processText))
     dp.add_handler(MessageHandler((Filters.sticker | Filters.animation), processSticker))
-    dp.add_handler(MessageHandler(antiFlood))
+    dp.add_handler(MessageHandler(Filters.all, antiFlood))
     
     dp.add_error_handler(error)
 
