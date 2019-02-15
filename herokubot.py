@@ -83,7 +83,7 @@ def processSticker(bot, update):
         baseClock_5hour = timenow
         stickerCount = {}
         
-    if(englishCount.setdefault(username, 0)>5):
+    if(stickerCount.setdefault(username, 0)>5):
         bot.delete_message(update.effective_message.chat.id, update.effective_message.message_id)
 
 def antiFlood(bot, update):
