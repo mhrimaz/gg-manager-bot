@@ -95,8 +95,8 @@ def antiFlood(bot, update):
     global baseClock_30min
     global floodStat
     global admins
-    
-    print(str(bot.get_chat_administrators(update.effective_message.chat.id)))
+    admins = [admin.user.id for admin in bot.get_chat_administrators(chat_id)]
+    print(str(admins))
     print("All Filter update "+str(update))
 
     user = update.effective_user
