@@ -113,7 +113,7 @@ def antiFlood(bot, update):
     if(temp > 2):
         baseClock_2sec = time.time()
         
-        if (msgCount.setdefault(userID, 0) > 10):
+        if (msgCount.setdefault(userID, 0) > 5):
             floodStat[userID] = True
         else:
             msgCount[userID] = 0
