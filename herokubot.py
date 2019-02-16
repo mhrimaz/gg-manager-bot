@@ -54,8 +54,8 @@ def processText(bot, update):
     userID = user.id
     if(userID in admins):
         return
-    if(languageDetector.detect(update.effective_message.text) == 'english')
-    return
+    if(languageDetector.detect(update.effective_message.text) == 'english'):
+        return
     if isEnglish(update.effective_message.text):
         englishCount[userID] = englishCount.setdefault(userID, 0) + 1
 
