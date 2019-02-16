@@ -44,13 +44,13 @@ def processText(bot, update):
     global englishCount
     global baseClock_5hour
     global admins
-    if(user.id in admins):
-        return
-    user = update.effective_user
-    username = user.id
     
+    user = update.effective_user
+    userID = user.id
+    if(userID in admins):
+        return
     if isEnglish(update.effective_message.text):
-        englishCount[username] = englishCount.setdefault(username, 0) + 1
+        englishCount[userID] = englishCount.setdefault(userID, 0) + 1
     
     
     
@@ -62,7 +62,7 @@ def processText(bot, update):
         englishCount = {}
         return
     
-    if(englishCount.setdefault(username, 0)>10) and isEnglish(update.effective_message.text):
+    if(englishCount.setdefault(userID, 0)>10) and isEnglish(update.effective_message.text):
         bot.delete_message(update.effective_message.chat.id, update.effective_message.message_id)
     
     
@@ -73,12 +73,12 @@ def processSticker(bot, update):
     global admins
     
     print("sticker update "+str(update))
-    if(user.id in admins):
-        return
-    user = update.effective_user
-    username = user.id
     
-    stickerCount[username] = stickerCount.setdefault(username, 0) + 1
+    user = update.effective_user
+    userID = user.id
+    if(userID in admins):
+        return
+    stickerCount[userID] = stickerCount.setdefault(userID, 0) + 1
     
     
     timenow = time.time()
@@ -89,7 +89,7 @@ def processSticker(bot, update):
         baseClock_5hour = timenow
         stickerCount = {}
         
-    if(stickerCount.setdefault(username, 0)>5):
+    if(stickerCount.setdefault(userID, 0)>5):
         bot.delete_message(update.effective_message.chat.id, update.effective_message.message_id)
 
 def antiFlood(bot, update):
@@ -100,11 +100,12 @@ def antiFlood(bot, update):
     global admins
     
     print("All Filter update "+str(update))
-    if(user.id in admins):
-        return
+    
     user = update.effective_user
-    username = user.id
-    msgCount[username] = msgCount.setdefault(username, 0) + 1
+    userID = user.id
+    if(userID in admins):
+        return
+    msgCount[userID] = msgCount.setdefault(userID, 0) + 1
 
     timenow = time.time()
 
@@ -112,17 +113,17 @@ def antiFlood(bot, update):
     if(temp > 2):
         baseClock_2sec = time.time()
         
-        if (msgCount.setdefault(username, 0) > 10):
-            floodStat[username] = True
+        if (msgCount.setdefault(userID, 0) > 10):
+            floodStat[userID] = True
         else:
-            msgCount[username] = 0
+            msgCount[userID] = 0
         
     if(((timenow - baseClock_30min)//60)>30):
         baseClock_30min = time.time()
         floodStat = {}
-        msgCount[username] = 0
+        msgCount[userID] = 0
         
-    if(floodStat.setdefault(username, False) ):
+    if(floodStat.setdefault(userID, False) ):
         bot.delete_message(update.effective_message.chat.id, update.effective_message.message_id)
         
 
