@@ -4,7 +4,7 @@ import random
 import datetime
 import time
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, BaseFilter
-from telegram import Message, User, Chat, MessageEntity, Document
+from telegram import Message, User, Chat, MessageEntity, Document, ChatMember
 from random import randint
 
 games = ['R6','R6','R6', 'RL', 'RL', 'RL', 'Apex']
@@ -12,7 +12,7 @@ stickerCount = {}
 englishCount = {}
 msgCount = {}
 floodStat = {}
-
+admins = ()
 baseClock_5hour = time.time()
 baseClock_2sec = time.time()
 baseClock_30min = time.time()
@@ -43,6 +43,7 @@ def isEnglish(text):
 def processText(bot, update):
     global englishCount
     global baseClock_5hour
+    global admins
     
     user = update.effective_user
     username = user['username']
@@ -68,6 +69,8 @@ def processText(bot, update):
 def processSticker(bot, update):
     global stickerCount
     global baseClock_5hour
+    global admins
+    
     print("sticker update "+str(update))
     
     user = update.effective_user
@@ -91,7 +94,9 @@ def antiFlood(bot, update):
     global baseClock_2sec
     global baseClock_30min
     global floodStat
+    global admins
     
+    print(str(bot.get_chat_administrators(update.effective_message.chat.id)))
     print("All Filter update "+str(update))
 
     user = update.effective_user
@@ -103,9 +108,11 @@ def antiFlood(bot, update):
     temp = timenow - baseClock_2sec
     if(temp > 2):
         baseClock_2sec = time.time()
-        msgCount[username] = 0
+        
         if (msgCount.setdefault(username, 0) > 10):
             floodStat[username] = True
+        else:
+            msgCount[username] = 0
         
     if(((timenow - baseClock_30min)//60)>30):
         baseClock_30min = time.time()
