@@ -44,9 +44,10 @@ def processText(bot, update):
     global englishCount
     global baseClock_5hour
     global admins
-    
+    if(user.id in admins):
+        return
     user = update.effective_user
-    username = user['username']
+    username = user.id
     
     if isEnglish(update.effective_message.text):
         englishCount[username] = englishCount.setdefault(username, 0) + 1
@@ -72,9 +73,10 @@ def processSticker(bot, update):
     global admins
     
     print("sticker update "+str(update))
-    
+    if(user.id in admins):
+        return
     user = update.effective_user
-    username = user['username']
+    username = user.id
     
     stickerCount[username] = stickerCount.setdefault(username, 0) + 1
     
@@ -96,12 +98,12 @@ def antiFlood(bot, update):
     global baseClock_30min
     global floodStat
     global admins
-    admins = set([admin.user.id for admin in bot.get_chat_administrators(update.effective_message.chat.id)])
-    print(str(admins))
+    
     print("All Filter update "+str(update))
-
+    if(user.id in admins):
+        return
     user = update.effective_user
-    username = user['username']
+    username = user.id
     msgCount[username] = msgCount.setdefault(username, 0) + 1
 
     timenow = time.time()
