@@ -12,7 +12,7 @@ stickerCount = {}
 englishCount = {}
 msgCount = {}
 floodStat = {}
-admins = []
+admins = set()
 baseClock_5hour = time.time()
 baseClock_2sec = time.time()
 baseClock_30min = time.time()
@@ -83,6 +83,7 @@ def processSticker(bot, update):
     temp = timenow-baseClock_5hour
     hours = temp//3600
     if(hours>5):
+        admins = set([admin.user.id for admin in bot.get_chat_administrators(update.effective_message.chat.id)])
         baseClock_5hour = timenow
         stickerCount = {}
         
@@ -95,7 +96,7 @@ def antiFlood(bot, update):
     global baseClock_30min
     global floodStat
     global admins
-    admins = [admin.user.id for admin in bot.get_chat_administrators(chat_id)]
+    admins = set([admin.user.id for admin in bot.get_chat_administrators(update.effective_message.chat.id)])
     print(str(admins))
     print("All Filter update "+str(update))
 
