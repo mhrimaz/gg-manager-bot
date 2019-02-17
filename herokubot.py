@@ -7,6 +7,7 @@ from language_detector import LanguageDetector
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, BaseFilter
 from telegram import Message, User, Chat, MessageEntity, Document, ChatMember
 from random import randint
+import nltk
 
 games = ['R6', 'R6', 'R6', 'RL', 'RL', 'RL', 'Apex']
 stickerCount = {}
@@ -170,10 +171,11 @@ def error(bot, update, error):
 
 
 if __name__ == "__main__":
+    nltk.download('stopwords')
     # Set these variable to the appropriate values
     TOKEN = os.environ.get('TOKEN')
     NAME = "gg-manager-bot"
-
+    
     # Port is given by Heroku
     PORT = os.environ.get('PORT')
 
