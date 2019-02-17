@@ -22,7 +22,15 @@ languageDetector = LanguageDetector()
 
 
 def unknown(bot, update):
-    print("command : " + str(update))
+    global admins
+    
+    user = update.effective_user
+    userID = user.id
+    #if(userID in admins):
+        
+    print("command : " + str(update.effective_message.text))
+    
+    
     bot.delete_message(update.effective_message.chat.id,
                        update.effective_message.message_id)
 
@@ -58,7 +66,7 @@ def processPhoto(bot, update):
     if(userID in admins):
         return
         
-    if isPhinglish(update.effective_message.photo.caption):
+    if isPhinglish(update.effective_message.caption):
         englishCount[userID] = englishCount.setdefault(userID, 0) + 1    
     else:
         return
