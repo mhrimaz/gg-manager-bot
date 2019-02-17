@@ -38,9 +38,10 @@ def unknown(bot, update):
     user = update.effective_user
     userID = user.id
     command = update.effective_message.text
-    
+    print(userID , " => ", str(admins))
+    print("user :",command[command.find('@')+1:]
     if((userID in admins) and (command.startswith("/forgive"))):
-        toForgive = users.setdefault(command[str(command[command.find('@')+1:])],"")
+        toForgive = users.setdefault(command[command.find('@')+1:],"")
         print(command, " ", toForgive)
         stickerCount[toForgive] = 0
         englishCount[toForgive] = 0
