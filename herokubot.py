@@ -14,6 +14,7 @@ stickerCount = {}
 englishCount = {}
 msgCount = {}
 floodStat = {}
+users = {}
 admins = set()
 baseClock_5hour = time.time()
 baseClock_2sec = time.time()
@@ -23,12 +24,14 @@ languageDetector = LanguageDetector()
 
 def unknown(bot, update):
     global admins
+    global users
     
     user = update.effective_user
     userID = user.id
+    command = update.effective_message.text
     #if(userID in admins):
-        
-    print("command : " + str(update.effective_message.text))
+        #command[command.find('s'):]
+    print("command : " + str(command[command.find('s'):]))
     
     
     bot.delete_message(update.effective_message.chat.id,
@@ -63,6 +66,7 @@ def processPhoto(bot, update):
     
     user = update.effective_user
     userID = user.id
+    userNameToUserId[user.id]
     if(userID in admins):
         return
         
@@ -144,11 +148,14 @@ def antiFlood(bot, update):
     global baseClock_30min
     global floodStat
     global admins
+    global users
 
     print("All Filter update "+str(update))
 
     user = update.effective_user
     userID = user.id
+    users[user.id] = user.username
+    users[user.username] = user.id
     if(userID in admins):
         return
     msgCount[userID] = msgCount.setdefault(userID, 0) + 1
