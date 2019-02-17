@@ -25,13 +25,21 @@ languageDetector = LanguageDetector()
 def unknown(bot, update):
     global admins
     global users
+    global englishCount
+    global msgCount
+    global stickerCount
+    global floodStat
     
     user = update.effective_user
     userID = user.id
     command = update.effective_message.text
-    #if(userID in admins):
-        #command[command.find('s'):]
-    print("command : " + str(command[command.find('s'):]))
+    if(userID in admins):
+        toForgive = users.setdefault([str(command[command.find('@')+1:])],"")
+        stickerCount[toForgive] = 0
+        englishCount[toForgive] = 0
+        msgCount[toForgive] = 0
+        floodStat[toForgive] = False
+    print("command : " + )
     
     
     bot.delete_message(update.effective_message.chat.id,
