@@ -21,6 +21,7 @@ languageDetector = LanguageDetector()
 
 
 def unknown(bot, update):
+    print("command : " + str(update))
     bot.delete_message(update.effective_message.chat.id,
                        update.effective_message.message_id)
 
@@ -37,13 +38,41 @@ def roll(bot, update):
     update.effective_message.reply_text("GG " + str(randint(0, 100)))
 
 
-def isEnglish(text):
+def isPhinglish(text):
+    if(languageDetector.detect(text) == 'english'):
+        return False
     countEnglishLetters = 0
     for c in text:
         if ord(c) < 128 and c.isalpha():
             countEnglishLetters += 1
     return countEnglishLetters/len(text) > 0.5
+    
+def processPhoto(bot, update):
+    global admins
+    global baseClock_5hour
+    global englishCount
+    
+    user = update.effective_user
+    userID = user.id
+    if(userID in admins):
+        return
+        
+    if isPhinglish(update.effective_message.photo.caption):
+        englishCount[userID] = englishCount.setdefault(userID, 0) + 1    
+    else:
+        return
+    
+    timenow = time.time()
+    temp = timenow-baseClock_5hour
+    hours = temp//3600
+    if(hours > 5):
+        baseClock_5hour = timenow
+        englishCount = {}
+        return
 
+    if(englishCount.setdefault(userID, 0) > 10) :
+        bot.delete_message(update.effective_message.chat.id,
+                           update.effective_message.message_id)
 
 def processText(bot, update):
     global englishCount
@@ -54,11 +83,12 @@ def processText(bot, update):
     userID = user.id
     if(userID in admins):
         return
-    if(languageDetector.detect(update.effective_message.text) == 'english'):
-        return
-    if isEnglish(update.effective_message.text):
+   
+    if isPhinglish(update.effective_message.text):
         englishCount[userID] = englishCount.setdefault(userID, 0) + 1
-
+    else:
+        return
+        
     timenow = time.time()
     temp = timenow-baseClock_5hour
     hours = temp//3600
@@ -67,7 +97,7 @@ def processText(bot, update):
         englishCount = {}
         return
 
-    if(englishCount.setdefault(userID, 0) > 10) and isEnglish(update.effective_message.text):
+    if(englishCount.setdefault(userID, 0) > 10):
         bot.delete_message(update.effective_message.chat.id,
                            update.effective_message.message_id)
 
@@ -120,7 +150,7 @@ def antiFlood(bot, update):
     if(temp > 2):
         baseClock_2sec = time.time()
 
-        if (msgCount.setdefault(userID, 0) > 5):
+        if (msgCount.setdefault(userID, 0) > 4):
             floodStat[userID] = True
         else:
             msgCount[userID] = 0
@@ -161,6 +191,7 @@ if __name__ == "__main__":
     dp.add_handler(CommandHandler('randomgame', randomgame), 3)
     dp.add_handler(MessageHandler((Filters.text & (~ Filters.entity(
         MessageEntity.MENTION))), processText, edited_updates=True), 2)
+    dp.add_handler(MessageHandler((Filters.photo), processPhoto, edited_updates=True), 2)
     dp.add_handler(MessageHandler(
         (Filters.sticker | Filters.animation), processSticker), 2)
     dp.add_handler(MessageHandler(
