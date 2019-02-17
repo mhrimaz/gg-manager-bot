@@ -10,6 +10,11 @@ from random import randint
 import nltk
 
 games = ['R6', 'R6', 'R6', 'RL', 'RL', 'RL', 'Apex']
+forgiveQuotes = ["The weak can never forgive. Forgiveness is the attribute of the strong.",
+                "One of the keys to happiness is a bad memory.",
+                "Forgiveness is not an occasional act, it is a constant attitude.",
+                "There is no love without forgiveness, and there is no forgiveness without love.",
+                "Mistakes are always forgivable, if one has the courage to admit them."]
 stickerCount = {}
 englishCount = {}
 msgCount = {}
@@ -33,17 +38,15 @@ def unknown(bot, update):
     user = update.effective_user
     userID = user.id
     command = update.effective_message.text
-    if(userID in admins):
+    if((userID in admins) and (command.startswith("/forgive"))):
         toForgive = users.setdefault([str(command[command.find('@')+1:])],"")
         stickerCount[toForgive] = 0
         englishCount[toForgive] = 0
         msgCount[toForgive] = 0
         floodStat[toForgive] = False
-    print("command : " + )
-    
-    
-    bot.delete_message(update.effective_message.chat.id,
-                       update.effective_message.message_id)
+        update.effective_message.reply_text(random.choice(forgiveQuotes))
+    else:
+        bot.delete_message(update.effective_message.chat.id,update.effective_message.message_id)
 
 
 def start(bot, update):
