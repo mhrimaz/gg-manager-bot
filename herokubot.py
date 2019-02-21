@@ -8,13 +8,15 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, BaseF
 from telegram import Message, User, Chat, MessageEntity, Document, ChatMember
 from random import randint
 import nltk
+import pymongo
+from datetime import datetime
 
 games = ['R6', 'R6', 'R6', 'RL', 'RL', 'RL', 'Apex']
 forgiveQuotes = ["The weak can never forgive. Forgiveness is the attribute of the strong.",
-                "One of the keys to happiness is a bad memory.",
-                "Forgiveness is not an occasional act, it is a constant attitude.",
-                "There is no love without forgiveness, and there is no forgiveness without love.",
-                "Mistakes are always forgivable, if one has the courage to admit them."]
+                 "One of the keys to happiness is a bad memory.",
+                 "Forgiveness is not an occasional act, it is a constant attitude.",
+                 "There is no love without forgiveness, and there is no forgiveness without love.",
+                 "Mistakes are always forgivable, if one has the courage to admit them."]
 stickerCount = {}
 englishCount = {}
 msgCount = {}
@@ -26,6 +28,15 @@ baseClock_2sec = time.time()
 baseClock_30min = time.time()
 languageDetector = LanguageDetector()
 
+try:
+    client = pymongo.MongoClient(
+        "mongodb+srv://gg-manager-bot-app:" + os.environ.get("GG_API_KEY") +
+        "@cluster0-01zqv.mongodb.net/?retryWrites=true")
+    fingMessages = client['gg-manager-bot']['fing-messages']
+except Exception as ex:
+    print("exception of type {} occurred. Args: {}".format(
+        type(ex).__name__, ex.args))
+
 
 def unknown(bot, update):
     global admins
@@ -34,16 +45,16 @@ def unknown(bot, update):
     global msgCount
     global stickerCount
     global floodStat
-    
+
     user = update.effective_user
     userID = user.id
     command = update.effective_message.text
     admins = set([admin.user.id for admin in bot.get_chat_administrators(
-            update.effective_message.chat.id)])
-    print(userID , " => ", str(admins))
-    print("user :",command[command.find('@')+1:])
+        update.effective_message.chat.id)])
+    print(userID, " => ", str(admins))
+    print("user :", command[command.find('@')+1:])
     if((userID in admins) and (command.startswith("/forgive"))):
-        toForgive = users.setdefault(command[command.find('@')+1:],"")
+        toForgive = users.setdefault(command[command.find('@')+1:], "")
         print(command, " ", toForgive)
         stickerCount[toForgive] = 0
         englishCount[toForgive] = 0
@@ -51,7 +62,8 @@ def unknown(bot, update):
         floodStat[toForgive] = False
         update.effective_message.reply_text(random.choice(forgiveQuotes))
     else:
-        bot.delete_message(update.effective_message.chat.id,update.effective_message.message_id)
+        bot.delete_message(update.effective_message.chat.id,
+                           update.effective_message.message_id)
 
 
 def start(bot, update):
@@ -74,23 +86,24 @@ def isPhinglish(text):
         if ord(c) < 128 and c.isalpha():
             countEnglishLetters += 1
     return countEnglishLetters/len(text) > 0.5
-    
+
+
 def processPhoto(bot, update):
     global admins
     global baseClock_5hour
     global englishCount
-    
+
     user = update.effective_user
     userID = user.id
     userNameToUserId[user.id]
     if(userID in admins):
         return
-        
+
     if isPhinglish(update.effective_message.caption):
-        englishCount[userID] = englishCount.setdefault(userID, 0) + 1    
+        englishCount[userID] = englishCount.setdefault(userID, 0) + 1
     else:
         return
-    
+
     timenow = time.time()
     temp = timenow-baseClock_5hour
     hours = temp//3600
@@ -99,9 +112,10 @@ def processPhoto(bot, update):
         englishCount = {}
         return
 
-    if(englishCount.setdefault(userID, 0) > 10) :
+    if(englishCount.setdefault(userID, 0) > 10):
         bot.delete_message(update.effective_message.chat.id,
                            update.effective_message.message_id)
+
 
 def processText(bot, update):
     global englishCount
@@ -112,12 +126,21 @@ def processText(bot, update):
     userID = user.id
     if(userID in admins):
         return
-   
+
     if isPhinglish(update.effective_message.text):
         englishCount[userID] = englishCount.setdefault(userID, 0) + 1
+        try:
+            fingMessages.insert([{
+                'uid': userID,
+                'username': user.name,
+                'time': datetime.now(),
+                'message': update.effective_message.text
+            }])
+        except NameError:
+            pass
     else:
         return
-        
+
     timenow = time.time()
     temp = timenow-baseClock_5hour
     hours = temp//3600
@@ -206,7 +229,7 @@ if __name__ == "__main__":
     # Set these variable to the appropriate values
     TOKEN = os.environ.get('TOKEN')
     NAME = "gg-manager-bot"
-    
+
     # Port is given by Heroku
     PORT = os.environ.get('PORT')
 
@@ -224,7 +247,8 @@ if __name__ == "__main__":
     dp.add_handler(CommandHandler('randomgame', randomgame), 3)
     dp.add_handler(MessageHandler((Filters.text & (~ Filters.entity(
         MessageEntity.MENTION))), processText, edited_updates=True), 2)
-    dp.add_handler(MessageHandler((Filters.photo), processPhoto, edited_updates=True), 2)
+    dp.add_handler(MessageHandler((Filters.photo),
+                                  processPhoto, edited_updates=True), 2)
     dp.add_handler(MessageHandler(
         (Filters.sticker | Filters.animation), processSticker), 2)
     dp.add_handler(MessageHandler(
