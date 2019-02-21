@@ -251,10 +251,8 @@ if __name__ == "__main__":
                                   processPhoto, edited_updates=True), 2)
     dp.add_handler(MessageHandler(
         (Filters.sticker | Filters.animation), processSticker), 2)
-    dp.add_handler(MessageHandler(
-        Filters.all, antiFlood, edited_updates=True), 1)
-    dp.add_handler(MessageHandler(Filters.command,
-                                  unknown, edited_updates=True), 4)
+    dp.add_handler(MessageHandler(Filters.all & (~ Filters.forwarded), antiFlood, edited_updates=True), 1)
+    dp.add_handler(MessageHandler(Filters.command,unknown, edited_updates=True), 4)
     dp.add_error_handler(error)
 
     # Start the webhook
