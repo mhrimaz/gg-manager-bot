@@ -97,7 +97,6 @@ def processPhoto(bot, update):
 
     user = update.effective_user
     userID = user.id
-    userNameToUserId[user.id]
     if(userID in admins):
         return
 
