@@ -27,6 +27,8 @@ baseClock_5hour = time.time()
 baseClock_2sec = time.time()
 baseClock_30min = time.time()
 languageDetector = LanguageDetector()
+GOD = os.environ.get('GOD')
+GROUP_ID = os.environ.get('GROUP_ID')
 
 try:
     client = pymongo.MongoClient(
@@ -190,6 +192,9 @@ def antiFlood(bot, update):
     global users
 
     print("All Filter update "+str(update))
+    if update.effective_message.chat.type == 'private':
+        if update.effective_message.chat.username == GOD:
+            bot.send_message(chat_id=GROUP_ID, text=update.effective_message.text)
 
     user = update.effective_user
     userID = user.id
