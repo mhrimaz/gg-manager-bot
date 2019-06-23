@@ -72,11 +72,11 @@ def unknown(bot, update):
             result = "Flood: "
             for key, value in floodStat.items():
                 if (value == True):
-                    result+=users[key]"\n"
+                    result+=str(users[key])+"\n"
             result+="\n Sticker: "
             for key, value in stickerCount.items():
                 if (value == True):
-                    result+=users[key]" : "+value+"\n"
+                    result+=str(users[key])+" : "+str(value)+"\n"
             update.effective_message.reply_text(result)
     else:
         bot.delete_message(update.effective_message.chat.id,
