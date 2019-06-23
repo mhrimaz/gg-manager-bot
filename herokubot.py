@@ -31,6 +31,10 @@ languageDetector = LanguageDetector()
 GOD = os.environ.get('GOD')
 GROUP_ID = os.environ.get('GROUP_ID')
 
+STICKER_LIMIT = 5
+PHINGLISH_LIMIT = 10
+TIME_WINDOW = 5
+
 try:
     client = pymongo.MongoClient(
         "mongodb+srv://gg-manager-bot-app:" + os.environ.get("GG_API_KEY") +
@@ -56,14 +60,24 @@ def unknown(bot, update):
         update.effective_message.chat.id)])
     print(userID, " => ", str(admins))
     print("user :", command[command.find('@')+1:])
-    if((userID in admins) and (command.startswith("/forgive"))):
-        toForgive = users.setdefault(command[command.find('@')+1:], "")
-        print(command, " ", toForgive)
-        stickerCount[toForgive] = 0
-        englishCount[toForgive] = 0
-        msgCount[toForgive] = 0
-        floodStat[toForgive] = False
-        update.effective_message.reply_text(random.choice(forgiveQuotes))
+    if(userID in admins)):
+        if(command.startswith("/forgive"):
+            toForgive = users.setdefault(command[command.find('@')+1:], "")
+            stickerCount[toForgive] = stickerCount[toForgive]/2
+            englishCount[toForgive] = englishCount[toForgive]/2
+            msgCount[toForgive] = msgCount[toForgive]/2
+            floodStat[toForgive] = False
+            update.effective_message.reply_text(random.choice(forgiveQuotes))
+        if(command.startswith("/banstat"):
+            result = "Flood: "
+            for key, value in floodStat.items():
+                if (value == True):
+                    result+=users[key]"\n"
+            result+="\n Sticker: "
+            for key, value in stickerCount.items():
+                if (value == True):
+                    result+=users[key]" : "+value+"\n"
+            update.effective_message.reply_text(result)
     else:
         bot.delete_message(update.effective_message.chat.id,
                            update.effective_message.message_id)
@@ -109,12 +123,12 @@ def processPhoto(bot, update):
     timenow = time.time()
     temp = timenow-baseClock_5hour
     hours = temp//3600
-    if(hours > 5):
+    if(hours > TIME_WINDOW):
         baseClock_5hour = timenow
         englishCount = {}
         return
 
-    if(englishCount.setdefault(userID, 0) > 10):
+    if(englishCount.setdefault(userID, 0) > PHINGLISH_LIMIT):
         bot.delete_message(update.effective_message.chat.id,
                            update.effective_message.message_id)
 
@@ -146,12 +160,12 @@ def processText(bot, update):
     timenow = time.time()
     temp = timenow-baseClock_5hour
     hours = temp//3600
-    if(hours > 5):
+    if(hours > TIME_WINDOW):
         baseClock_5hour = timenow
         englishCount = {}
         return
 
-    if(englishCount.setdefault(userID, 0) > 10):
+    if(englishCount.setdefault(userID, 0) > PHINGLISH_LIMIT):
         bot.delete_message(update.effective_message.chat.id,
                            update.effective_message.message_id)
 
@@ -172,13 +186,13 @@ def processSticker(bot, update):
     timenow = time.time()
     temp = timenow-baseClock_5hour
     hours = temp//3600
-    if(hours > 5):
+    if(hours > TIME_WINDOW):
         admins = set([admin.user.id for admin in bot.get_chat_administrators(
             update.effective_message.chat.id)])
         baseClock_5hour = timenow
         stickerCount = {}
 
-    if(stickerCount.setdefault(userID, 0) > 5):
+    if(stickerCount.setdefault(userID, 0) > STICKER_LIMIT):
         bot.delete_message(update.effective_message.chat.id,
                            update.effective_message.message_id)
 
@@ -264,7 +278,7 @@ if __name__ == "__main__":
                                   processPhoto, edited_updates=True), 2)
     dp.add_handler(MessageHandler(
         (Filters.sticker | Filters.animation), processSticker), 2)
-    dp.add_handler(MessageHandler(Filters.all & (~ Filters.forwarded), antiFlood, edited_updates=True), 1)
+    dp.add_handler(MessageHandler(Filters.all & (~ (Filters.forwarded|Filters.photo)), antiFlood, edited_updates=True), 1)
     dp.add_handler(MessageHandler(Filters.command,unknown, edited_updates=True), 4)
     dp.add_error_handler(error)
 
