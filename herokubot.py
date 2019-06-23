@@ -44,6 +44,26 @@ except Exception as ex:
     print("exception of type {} occurred. Args: {}".format(
         type(ex).__name__, ex.args))
 
+def getBanStatus():
+    global admins
+    global users
+    global englishCount
+    global msgCount
+    global stickerCount
+    global floodStat
+    result = "Flood: "
+    for key, value in floodStat.items():
+        if (value == True):
+            result+=str(users[key])+"\n"
+    result+="\nSticker: "
+    for key, value in stickerCount.items():
+        if (value == True):
+            result+=str(users[key])+" : "+str(value)+"\n"
+    result+="\nPhinglish: "
+    for key, value in englishCount.items():
+        if (value == True):
+            result+=str(users[key])+" : "+str(value)+"\n"
+    return result
 
 def unknown(bot, update):
     global admins
@@ -69,15 +89,7 @@ def unknown(bot, update):
             floodStat[toForgive] = False
             update.effective_message.reply_text(random.choice(forgiveQuotes))
         if(command.startswith("/banstat")):
-            result = "Flood: "
-            for key, value in floodStat.items():
-                if (value == True):
-                    result+=str(users[key])+"\n"
-            result+="\n Sticker: "
-            for key, value in stickerCount.items():
-                if (value == True):
-                    result+=str(users[key])+" : "+str(value)+"\n"
-            update.effective_message.reply_text(result)
+            update.effective_message.reply_text(getBanStatus())
     else:
         bot.delete_message(update.effective_message.chat.id,
                            update.effective_message.message_id)
