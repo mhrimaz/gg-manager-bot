@@ -196,8 +196,8 @@ def antiFlood(bot, update):
         if update.effective_message.chat.username == GOD:
             if(update.effective_message.text.startswith('http')):
                 url = update.effective_message.text 
-                urllib.request.urlretrieve(url, 'send'+GOD+'.mp4')  
-                bot.send_document(chat_id=chat_id, document=open('send'+GOD+'.mp4', 'rb'))
+                urllib.request.urlretrieve(url, 'send'+GOD+'.gif')  
+                bot.send_document(chat_id=GROUP_ID, document=open('send'+GOD+'.gif', 'rb'))
             else:
                 bot.send_message(chat_id=GROUP_ID, text=update.effective_message.text)
 
