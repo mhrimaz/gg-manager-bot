@@ -10,6 +10,7 @@ from random import randint
 import nltk
 import pymongo
 from datetime import datetime
+import urllib.request
 
 games = ['R6', 'R6', 'R6', 'RL', 'RL', 'RL', 'Apex']
 forgiveQuotes = ["The weak can never forgive. Forgiveness is the attribute of the strong.",
@@ -193,7 +194,15 @@ def antiFlood(bot, update):
     print("All Filter update "+str(update))
     if update.effective_message.chat.type == 'private':
         if update.effective_message.chat.username == GOD:
-            bot.send_message(chat_id=GROUP_ID, text=update.effective_message.text)
+            if(update.effective_message.text.startswith('http')):
+                url = update.effective_message.text 
+                urllib.request.urlretrieve(url, 'send'+GOD+'.mp4')  
+                bot.send_document(chat_id=chat_id, document=open('send'+GOD+'.mp4', 'rb'))
+            else:
+                bot.send_message(chat_id=GROUP_ID, text=update.effective_message.text)
+
+            
+            
 
     user = update.effective_user
     userID = user.id
