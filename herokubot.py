@@ -61,14 +61,14 @@ def unknown(bot, update):
     print(userID, " => ", str(admins))
     print("user :", command[command.find('@')+1:])
     if(userID in admins):
-        if(command.startswith("/forgive"):
+        if(command.startswith("/forgive")):
             toForgive = users.setdefault(command[command.find('@')+1:], "")
             stickerCount[toForgive] = stickerCount[toForgive]/2
             englishCount[toForgive] = englishCount[toForgive]/2
             msgCount[toForgive] = msgCount[toForgive]/2
             floodStat[toForgive] = False
             update.effective_message.reply_text(random.choice(forgiveQuotes))
-        if(command.startswith("/banstat"):
+        if(command.startswith("/banstat")):
             result = "Flood: "
             for key, value in floodStat.items():
                 if (value == True):
