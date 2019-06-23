@@ -60,7 +60,7 @@ def unknown(bot, update):
         update.effective_message.chat.id)])
     print(userID, " => ", str(admins))
     print("user :", command[command.find('@')+1:])
-    if(userID in admins)):
+    if(userID in admins):
         if(command.startswith("/forgive"):
             toForgive = users.setdefault(command[command.find('@')+1:], "")
             stickerCount[toForgive] = stickerCount[toForgive]/2
