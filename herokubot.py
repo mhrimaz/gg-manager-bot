@@ -107,8 +107,9 @@ def unknown(bot, update):
     user = update.effective_user
     userID = user.id
     command = update.effective_message.text
-    admins = set([admin.user.id for admin in bot.get_chat_administrators(
-        update.effective_message.chat.id)])
+    if(not (update.effective_message.chtt.id == GROUP_ID)):
+        return
+    admins = set([admin.user.id for admin in bot.get_chat_administrators(GROUP_ID)])
     print(userID, " => ", str(admins))
     print("user :", command[command.find('@')+1:])
     if(userID in admins):
