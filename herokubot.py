@@ -11,6 +11,8 @@ import nltk
 import pymongo
 from datetime import datetime
 import urllib.request
+import requests
+from bs4 import BeautifulSoup
 
 games = ['R6', 'R6', 'R6', 'RL', 'RL', 'RL', 'Apex']
 forgiveQuotes = ["The weak can never forgive. Forgiveness is the attribute of the strong.",
@@ -30,7 +32,8 @@ baseClock_30min = time.time()
 languageDetector = LanguageDetector()
 GOD = os.environ.get('GOD')
 GROUP_ID = os.environ.get('GROUP_ID')
-
+GIF_SOURCE = os.environ.get('GIF_SOURCE')
+GIFS = []
 STICKER_LIMIT = 5
 PHINGLISH_LIMIT = 10
 TIME_WINDOW = 5
@@ -65,6 +68,23 @@ def getBanStatus():
             result+=str(users[key])+" : "+str(value)+"\n"
     return result
 
+def gelAllGifs(gifSourceURL):
+    url = gifSourceURL
+
+    response = requests.request("GET", url)
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    img_tags = soup.find_all('img')
+
+    urls = [img['src'] for img in img_tags]
+
+    allGifs = []
+    for url in urls:
+        if url.startswith('http') and url.endswith('gif'):
+            allGifs.append(url)
+    print(str(allGifs))
+    return allGifs   
+
 def unknown(bot, update):
     global admins
     global users
@@ -72,6 +92,7 @@ def unknown(bot, update):
     global msgCount
     global stickerCount
     global floodStat
+    global GIFS
 
     user = update.effective_user
     userID = user.id
@@ -90,6 +111,10 @@ def unknown(bot, update):
             update.effective_message.reply_text(random.choice(forgiveQuotes))
         if(command.startswith("/banstat")):
             update.effective_message.reply_text(getBanStatus())
+        if(command.startswith("/gif")):
+            url = GIFS.pop(random.randrange(len(GIFS)))
+            urllib.request.urlretrieve(url, 'send'+GOD+'.gif')  
+            bot.send_document(chat_id=GROUP_ID, document=open('send'+GOD+'.gif', 'rb'))
     else:
         bot.delete_message(update.effective_message.chat.id,
                            update.effective_message.message_id)
@@ -187,8 +212,6 @@ def processSticker(bot, update):
     global baseClock_5hour
     global admins
 
-    print("sticker update "+str(update))
-
     user = update.effective_user
     userID = user.id
     if(userID in admins):
@@ -216,20 +239,19 @@ def antiFlood(bot, update):
     global floodStat
     global admins
     global users
+    global GIFS
 
     print("All Filter update "+str(update))
     if update.effective_message.chat.type == 'private':
         if update.effective_message.chat.username == GOD:
             if(update.effective_message.text.startswith('http')):
-                url = update.effective_message.text 
-                urllib.request.urlretrieve(url, 'send'+GOD+'.gif')  
-                bot.send_document(chat_id=GROUP_ID, document=open('send'+GOD+'.gif', 'rb'))
+                url = update.effective_message.text
+                GIFS = gelAllGifs(url)
+           
             else:
                 bot.send_message(chat_id=GROUP_ID, text=update.effective_message.text)
 
-            
-            
-
+        
     user = update.effective_user
     userID = user.id
     users[user.id] = user.username
