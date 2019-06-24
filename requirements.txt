@@ -2,3 +2,4 @@ python-telegram-bot
 nltk
 pymongo[tls,srv]
 beautifulsoup4
+requests
