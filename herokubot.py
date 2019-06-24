@@ -33,16 +33,36 @@ languageDetector = LanguageDetector()
 GOD = os.environ.get('GOD')
 GROUP_ID = os.environ.get('GROUP_ID')
 GIF_SOURCE = os.environ.get('GIF_SOURCE')
-GIFS = getAllGifs(GIF_SOURCE)
+GIFS = []
 STICKER_LIMIT = 5
 PHINGLISH_LIMIT = 10
 TIME_WINDOW = 5
+
+def getAllGifs(gifSourceURL):
+    url = gifSourceURL
+
+    response = requests.request("GET", url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    
+    allGifs = []
+    for image in soup.findAll('img'):
+        v = image.get('src', image.get('data-src'))  # get's "src", else "dfr_src"
+                                                    # if both are missing - None
+        if v is None:
+            continue
+        if url.startswith('http') and url.endswith('gif'):
+            allGifs.append(url)
+    
+    print(str(allGifs))
+    return allGifs   
 
 try:
     client = pymongo.MongoClient(
         "mongodb+srv://gg-manager-bot-app:" + os.environ.get("GG_API_KEY") +
         "@cluster0-01zqv.mongodb.net/?retryWrites=true")
     fingMessages = client['gg-manager-bot']['fing-messages']
+    GIFS = getAllGifs(GIF_SOURCE)
 except Exception as ex:
     print("exception of type {} occurred. Args: {}".format(
         type(ex).__name__, ex.args))
@@ -66,24 +86,7 @@ def getBanStatus():
             result+=str(users[key])+" : "+str(value)+"\n"
     return result
 
-def getAllGifs(gifSourceURL):
-    url = gifSourceURL
 
-    response = requests.request("GET", url)
-    soup = BeautifulSoup(response.text, 'html.parser')
-    
-    
-    allGifs = []
-    for image in soup.findAll('img'):
-        v = image.get('src', image.get('data-src'))  # get's "src", else "dfr_src"
-                                                    # if both are missing - None
-        if v is None:
-            continue
-        if url.startswith('http') and url.endswith('gif'):
-            allGifs.append(url)
-    
-    print(str(allGifs))
-    return allGifs   
 
 def unknown(bot, update):
     global admins
