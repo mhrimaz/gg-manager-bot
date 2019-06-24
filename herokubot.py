@@ -53,8 +53,7 @@ def getAllGifs(gifSourceURL):
         if v1 is not None:
             if v.startswith('http') and v.endswith('gif'):
                 allGifs.append(v)
-        else: 
-            if v2 is not None:
+        if v2 is not None:
                 if v.startswith('http') and v.endswith('gif'):
                     allGifs.append(v)
     
