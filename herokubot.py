@@ -33,7 +33,7 @@ languageDetector = LanguageDetector()
 GOD = os.environ.get('GOD')
 GROUP_ID = os.environ.get('GROUP_ID')
 GIF_SOURCE = os.environ.get('GIF_SOURCE')
-GIFS = []
+GIFS = gelAllGifs(GIF_SOURCE)
 STICKER_LIMIT = 5
 PHINGLISH_LIMIT = 10
 TIME_WINDOW = 5
@@ -71,14 +71,17 @@ def gelAllGifs(gifSourceURL):
 
     response = requests.request("GET", url)
     soup = BeautifulSoup(response.text, 'html.parser')
-    img_tags = soup.find_all('img')
-
-    urls = [img['src'] for img in img_tags].extend([img['data-src'] for img in img_tags])
+    
     
     allGifs = []
-    for url in urls:
+    for image in soup.findAll('img'):
+        v = image.get('src', image.get('data-src'))  # get's "src", else "dfr_src"
+                                                    # if both are missing - None
+        if v is None:
+            continue
         if url.startswith('http') and url.endswith('gif'):
             allGifs.append(url)
+    
     print(str(allGifs))
     return allGifs   
 
