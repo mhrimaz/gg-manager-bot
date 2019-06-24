@@ -126,11 +126,11 @@ def unknown(bot, update):
         if(command.startswith("/gif")):
             url = GIFS.pop(random.randrange(len(GIFS)))
             urllib.request.urlretrieve(url, 'GG-'+update.effective_message.date+'.gif')  
-            bot.send_document(chat_id=GROUP_ID, document=open('GG-'+update.effective_message.date+'.gif', 'rb'))
+            bot.send_document(chat_id=GROUP_ID, document=open('GG-'+str(update.effective_message.date)+'.gif', 'rb'))
         if(command.startswith("/gifx")):
             url = GIFS.pop(random.randrange(len(GIFSX)))
             urllib.request.urlretrieve(url, 'GGX-'+update.effective_message.date+'.gif')  
-            bot.send_document(chat_id=GROUP_ID, document=open('GGX-'+update.effective_message.date+'.gif', 'rb'))
+            bot.send_document(chat_id=GROUP_ID, document=open('GGX-'+str(update.effective_message.date)+'.gif', 'rb'))
     else:
         bot.delete_message(update.effective_message.chat.id,
                            update.effective_message.message_id)
