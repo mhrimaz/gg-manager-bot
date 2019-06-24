@@ -70,12 +70,11 @@ def gelAllGifs(gifSourceURL):
     url = gifSourceURL
 
     response = requests.request("GET", url)
-
     soup = BeautifulSoup(response.text, 'html.parser')
     img_tags = soup.find_all('img')
 
-    urls = [img['src'] for img in img_tags]
-
+    urls = [img['src'] for img in img_tags].extend([img['data-src'] for img in img_tags])
+    
     allGifs = []
     for url in urls:
         if url.startswith('http') and url.endswith('gif'):
