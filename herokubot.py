@@ -44,18 +44,18 @@ def getAllGifs(gifSourceURL):
     response = requests.request("GET", url)
     soup = BeautifulSoup(response.text, 'html.parser')
     
-    
     allGifs = []
     for image in soup.findAll('img'):
         v1 = image.get('src')  # get's "src", else "dfr_src"
                                                     # if both are missing - None
         v2 = image.get('data-src',image.get('dfr-src'))
+        
         if v1 is not None:
-            if v.startswith('http') and v.endswith('gif'):
-                allGifs.append(v)
+            if v1.startswith('http') and v1.endswith('gif'):
+                allGifs.append(v1)
         if v2 is not None:
-                if v.startswith('http') and v.endswith('gif'):
-                    allGifs.append(v)
+                if v2.startswith('http') and v2.endswith('gif'):
+                    allGifs.append(v2)
     
     
     return allGifs   
