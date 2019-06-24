@@ -123,11 +123,11 @@ def unknown(bot, update):
             update.effective_message.reply_text(getBanStatus())
             GIFS = getAllGifs(GIF_SOURCE)
             GIFSX = getAllGifs(GIF_SOURCEX)
-        if(command.startswith("/gif")):
+        if(command == "/gif"):
             url = GIFS.pop(random.randrange(len(GIFS)))
             urllib.request.urlretrieve(url, 'GG-'+str(update.effective_message.date)+'.gif')  
             bot.send_document(chat_id=GROUP_ID, document=open('GG-'+str(update.effective_message.date)+'.gif', 'rb'))
-        if(command.startswith("/gifx")):
+        if(command == "/gifx"):
             url = GIFS.pop(random.randrange(len(GIFSX)))
             urllib.request.urlretrieve(url, 'GGX-'+str(update.effective_message.date)+'.gif')  
             bot.send_document(chat_id=GROUP_ID, document=open('GGX-'+str(update.effective_message.date)+'.gif', 'rb'))
