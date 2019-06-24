@@ -128,7 +128,7 @@ def unknown(bot, update):
             urllib.request.urlretrieve(url, 'GG-'+str(update.effective_message.date)+'.gif')  
             bot.send_document(chat_id=GROUP_ID, document=open('GG-'+str(update.effective_message.date)+'.gif', 'rb'))
         if(command == "/gifx"):
-            url = GIFS.pop(random.randrange(len(GIFSX)))
+            url = GIFSX.pop(random.randrange(len(GIFSX)))
             urllib.request.urlretrieve(url, 'GGX-'+str(update.effective_message.date)+'.gif')  
             bot.send_document(chat_id=GROUP_ID, document=open('GGX-'+str(update.effective_message.date)+'.gif', 'rb'))
     else:
