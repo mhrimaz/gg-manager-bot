@@ -33,7 +33,7 @@ languageDetector = LanguageDetector()
 GOD = os.environ.get('GOD')
 GROUP_ID = os.environ.get('GROUP_ID')
 GIF_SOURCE = os.environ.get('GIF_SOURCE')
-GIFS = gelAllGifs(GIF_SOURCE)
+GIFS = getAllGifs(GIF_SOURCE)
 STICKER_LIMIT = 5
 PHINGLISH_LIMIT = 10
 TIME_WINDOW = 5
@@ -66,7 +66,7 @@ def getBanStatus():
             result+=str(users[key])+" : "+str(value)+"\n"
     return result
 
-def gelAllGifs(gifSourceURL):
+def getAllGifs(gifSourceURL):
     url = gifSourceURL
 
     response = requests.request("GET", url)
@@ -246,7 +246,7 @@ def antiFlood(bot, update):
         if update.effective_message.chat.username == GOD:
             if(update.effective_message.text.startswith('http')):
                 url = update.effective_message.text
-                GIFS = gelAllGifs(url)
+                GIFS = getAllGifs(url)
            
             else:
                 bot.send_message(chat_id=GROUP_ID, text=update.effective_message.text)
