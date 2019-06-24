@@ -44,7 +44,7 @@ def getAllGifs(gifSourceURL):
     response = requests.request("GET", url)
     soup = BeautifulSoup(response.text, 'html.parser')
     
-    
+    print(str(soup.findAll('img')))
     allGifs = []
     for image in soup.findAll('img'):
         v = image.get('src', image.get('data-src'))  # get's "src", else "dfr_src"
