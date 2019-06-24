@@ -60,11 +60,9 @@ def getBanStatus():
             result+=str(users[key])+"\n"
     result+="\nSticker: "
     for key, value in stickerCount.items():
-        if (value == True):
             result+=str(users[key])+" : "+str(value)+"\n"
     result+="\nPhinglish: "
     for key, value in englishCount.items():
-        if (value == True):
             result+=str(users[key])+" : "+str(value)+"\n"
     return result
 
