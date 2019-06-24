@@ -33,7 +33,9 @@ languageDetector = LanguageDetector()
 GOD = os.environ.get('GOD')
 GROUP_ID = os.environ.get('GROUP_ID')
 GIF_SOURCE = os.environ.get('GIF_SOURCE')
+GIF_SOURCEX = os.environ.get('GIF_SOURCEX')
 GIFS = []
+GIFSX = []
 STICKER_LIMIT = 5
 PHINGLISH_LIMIT = 10
 TIME_WINDOW = 5
@@ -66,6 +68,7 @@ try:
         "@cluster0-01zqv.mongodb.net/?retryWrites=true")
     fingMessages = client['gg-manager-bot']['fing-messages']
     GIFS = getAllGifs(GIF_SOURCE)
+    GIFSX = getAllGifs(GIF_SOURCEX)
 except Exception as ex:
     print("exception of type {} occurred. Args: {}".format(
         type(ex).__name__, ex.args))
@@ -99,6 +102,7 @@ def unknown(bot, update):
     global stickerCount
     global floodStat
     global GIFS
+    global GIFSX
 
     user = update.effective_user
     userID = user.id
@@ -117,10 +121,16 @@ def unknown(bot, update):
             update.effective_message.reply_text(random.choice(forgiveQuotes))
         if(command.startswith("/banstat")):
             update.effective_message.reply_text(getBanStatus())
+            GIFS = getAllGifs(GIF_SOURCE)
+            GIFSX = getAllGifs(GIF_SOURCEX)
         if(command.startswith("/gif")):
             url = GIFS.pop(random.randrange(len(GIFS)))
-            urllib.request.urlretrieve(url, 'send'+GOD+'.gif')  
-            bot.send_document(chat_id=GROUP_ID, document=open('send'+GOD+'.gif', 'rb'))
+            urllib.request.urlretrieve(url, 'GG-'+update.effective_message.date+'.gif')  
+            bot.send_document(chat_id=GROUP_ID, document=open('GG-'+update.effective_message.date+'.gif', 'rb'))
+        if(command.startswith("/gifx")):
+            url = GIFS.pop(random.randrange(len(GIFSX)))
+            urllib.request.urlretrieve(url, 'GGX-'+update.effective_message.date+'.gif')  
+            bot.send_document(chat_id=GROUP_ID, document=open('GGX-'+update.effective_message.date+'.gif', 'rb'))
     else:
         bot.delete_message(update.effective_message.chat.id,
                            update.effective_message.message_id)
@@ -246,22 +256,25 @@ def antiFlood(bot, update):
     global admins
     global users
     global GIFS
+    global GIFSX
 
     print("All Filter update "+str(update))
-    if update.effective_message.chat.type == 'private':
-        if update.effective_message.chat.username == GOD:
-            if(update.effective_message.text.startswith('http')):
-                url = update.effective_message.text
-                GIFS = getAllGifs(url)
-           
-            else:
-                bot.send_message(chat_id=GROUP_ID, text=update.effective_message.text)
 
         
     user = update.effective_user
     userID = user.id
     users[user.id] = user.username
     users[user.username] = user.id
+
+    if update.effective_message.chat.type == 'private':
+        if user.username == GOD:
+            if(update.effective_message.text.startswith('http')):
+                url = update.effective_message.text
+                GIFS = getAllGifs(url)
+            else:
+                bot.send_message(chat_id=GROUP_ID, text=update.effective_message.text)
+
+
     if(userID in admins):
         return
     msgCount[userID] = msgCount.setdefault(userID, 0) + 1
