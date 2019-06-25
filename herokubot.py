@@ -31,6 +31,7 @@ baseClock_2sec = time.time()
 baseClock_30min = time.time()
 languageDetector = LanguageDetector()
 GOD = os.environ.get('GOD')
+ALLOWEDGROUPS = os.environ.get('ALLOWEDGROUPS')
 GROUP_ID = os.environ.get('GROUP_ID')
 GIF_SOURCE = os.environ.get('GIF_SOURCE')
 GIF_SOURCEX = os.environ.get('GIF_SOURCEX')
@@ -125,11 +126,11 @@ def unknown(bot, update):
         if(command == "/gif"):
             url = GIFS.pop(random.randrange(len(GIFS)))
             urllib.request.urlretrieve(url, 'GG-'+str(update.effective_message.date)+'.gif')  
-            bot.send_document(chat_id=GROUP_ID, document=open('GG-'+str(update.effective_message.date)+'.gif', 'rb'))
+            bot.send_document(chat_id=update.effective_message.chat.id, document=open('GG-'+str(update.effective_message.date)+'.gif', 'rb'))
         if(command == "/gifx"):
             url = GIFSX.pop(random.randrange(len(GIFSX)))
             urllib.request.urlretrieve(url, 'GGX-'+str(update.effective_message.date)+'.gif')  
-            bot.send_document(chat_id=GROUP_ID, document=open('GGX-'+str(update.effective_message.date)+'.gif', 'rb'))
+            bot.send_document(chat_id=update.effective_message.chat.id, document=open('GGX-'+str(update.effective_message.date)+'.gif', 'rb'))
     else:
         bot.delete_message(update.effective_message.chat.id,
                            update.effective_message.message_id)
