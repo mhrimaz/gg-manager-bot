@@ -271,7 +271,7 @@ def antiFlood(bot, update):
             if(update.effective_message.text.startswith('http')):
                 url = update.effective_message.text
                 GIFS = getAllGifs(url)
-            else if not update.effective_message.text.startswith('/'):
+            elif (not update.effective_message.text.startswith("/")):
                 bot.send_message(chat_id=GROUP_ID, text=update.effective_message.text)
 
 
