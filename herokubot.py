@@ -13,6 +13,7 @@ from datetime import datetime
 import urllib.request
 import requests
 from bs4 import BeautifulSoup
+import re
 
 games = ['R6', 'R6', 'R6', 'RL', 'RL', 'RL', 'Apex']
 forgiveQuotes = ["The weak can never forgive. Forgiveness is the attribute of the strong.",
@@ -127,12 +128,18 @@ def unknown(bot, update):
             url = GIFS.pop(random.randrange(len(GIFS)))
             urllib.request.urlretrieve(url, 'GG-'+str(update.effective_message.date)+'.gif')  
             bot.send_document(chat_id=update.effective_message.chat.id, document=open('GG-'+str(update.effective_message.date)+'.gif', 'rb'))
-        if(command == "/gifx"):
-            url = GIFSX.pop(random.randrange(len(GIFSX)))
-            urllib.request.urlretrieve(url, 'GGX-'+str(update.effective_message.date)+'.gif')  
-            bot.send_document(chat_id=update.effective_message.chat.id, document=open('GGX-'+str(update.effective_message.date)+'.gif', 'rb'))
-    else:
-        bot.delete_message(update.effective_message.chat.id,
+        if(command.startswith("/gifx")):
+            count = 1
+            if(command.find('@')>=0):
+                count = int(command[command.find('@')+1:])
+            
+            for i in count:
+                url = GIFSX.pop(random.randrange(len(GIFSX)))
+                urllib.request.urlretrieve(url, 'GGX-'+str(update.effective_message.date)+str(i)+'.gif')  
+                bot.send_document(chat_id=update.effective_message.chat.id, document=open('GGX-'+str(update.effective_message.date)+str(i)+'.gif', 'rb'))
+        
+            
+    bot.delete_message(update.effective_message.chat.id,
                            update.effective_message.message_id)
 
 
@@ -271,7 +278,7 @@ def antiFlood(bot, update):
             if(update.effective_message.text.startswith('http')):
                 url = update.effective_message.text
                 GIFS = getAllGifs(url)
-            elif (not update.effective_message.text.startswith("/")):
+            elif not update.effective_message.text.startswith('/'):
                 bot.send_message(chat_id=GROUP_ID, text=update.effective_message.text)
 
 
