@@ -133,7 +133,7 @@ def unknown(bot, update):
             if(command.find('@')>=0):
                 count = int(command[command.find('@')+1:])
             
-            for i in count:
+            for i in range(count):
                 url = GIFSX.pop(random.randrange(len(GIFSX)))
                 urllib.request.urlretrieve(url, 'GGX-'+str(update.effective_message.date)+str(i)+'.gif')  
                 bot.send_document(chat_id=update.effective_message.chat.id, document=open('GGX-'+str(update.effective_message.date)+str(i)+'.gif', 'rb'))
