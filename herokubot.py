@@ -97,7 +97,6 @@ def getBanStatus():
     return result
 
 def getSteamStatus(bot, update):
-    import requests
 
     url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"
     steamIDS = {}
@@ -360,7 +359,7 @@ if __name__ == "__main__":
     dp.add_handler(CommandHandler('start', start), 3)
     dp.add_handler(CommandHandler('roll', roll), 3)
     dp.add_handler(CommandHandler('randomgame', randomgame), 3)
-    dp.add_handler(CommandHandler('gg', randomgame), 3)
+    dp.add_handler(CommandHandler('gg', getSteamStatus), 3)
     dp.add_handler(MessageHandler((Filters.text & (~ Filters.entity(
         MessageEntity.MENTION))), processText, edited_updates=True), 2)
     dp.add_handler(MessageHandler((Filters.photo),
