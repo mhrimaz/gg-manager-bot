@@ -36,6 +36,8 @@ ALLOWEDGROUPS = os.environ.get('ALLOWEDGROUPS')
 GROUP_ID = os.environ.get('GROUP_ID')
 GIF_SOURCE = os.environ.get('GIF_SOURCE')
 GIF_SOURCEX = os.environ.get('GIF_SOURCEX')
+STEAM_KEY = os.environ.get('STEAM_KEY')
+STEAM_IDS = os.environ.get('STEAM_IDS')
 GIFS = []
 GIFSX = []
 STICKER_LIMIT = 5
@@ -94,6 +96,32 @@ def getBanStatus():
             result+=str(users[key])+" : "+str(value)+"\n"
     return result
 
+def getSteamStatus(bot, update):
+    import requests
+
+    url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"
+    steamIDS = {}
+    for item in STEAM_IDS.split("#"):
+        if ":" in item:
+            s = item.split(":")
+            steamIDS[s[0]] = s[1]
+
+    
+    querystring = {"key":STEAM_KEY,"steamids":",".join(steamIDS.keys())}
+
+    payload = ""
+    headers = {
+        'cache-control': "no-cache"
+        }
+
+    response = requests.request("GET", url, data=payload, headers=headers, params=querystring)
+    data = response.json()
+    output = "GG\n"
+    for player in data['response']['players']:
+        game = player.setdefault('gameextrainfo',"")
+        if(game != ""):
+            output+=steamIDS[player['steamid']]+ " GG "+player['gameextrainfo']+"\n"
+    update.effective_message.reply_text(output)
 
 
 def unknown(bot, update):
@@ -292,7 +320,7 @@ def antiFlood(bot, update):
     if(temp > 2):
         baseClock_2sec = time.time()
 
-        if (msgCount.setdefault(userID, 0) > 4):
+        if (msgCount.setdefault(userID, 0) > 10):
             floodStat[userID] = True
         else:
             msgCount[userID] = 0
@@ -332,6 +360,7 @@ if __name__ == "__main__":
     dp.add_handler(CommandHandler('start', start), 3)
     dp.add_handler(CommandHandler('roll', roll), 3)
     dp.add_handler(CommandHandler('randomgame', randomgame), 3)
+    dp.add_handler(CommandHandler('gg', randomgame), 3)
     dp.add_handler(MessageHandler((Filters.text & (~ Filters.entity(
         MessageEntity.MENTION))), processText, edited_updates=True), 2)
     dp.add_handler(MessageHandler((Filters.photo),
