@@ -15,6 +15,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import itertools
+import operator
 
 games = ['R6', 'R6', 'R6', 'RL', 'RL', 'RL', 'Apex']
 forgiveQuotes = ["The weak can never forgive. Forgiveness is the attribute of the strong.",
