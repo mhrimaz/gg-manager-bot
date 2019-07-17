@@ -129,7 +129,8 @@ def getSteamStatus(bot, update):
         output+="**"+key+"** \n"
         for item in subiter:
             output+=" ├ "+item[1]+"\n"
-    update.effective_message.reply_text(output)
+    bot.send_message(chat_id=update.effective_message.chat.id,text=output,parse_mode=telegram.ParseMode.MARKDOWN)
+    
 
 
 def unknown(bot, update):
