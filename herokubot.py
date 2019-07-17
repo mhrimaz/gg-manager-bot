@@ -14,6 +14,7 @@ import urllib.request
 import requests
 from bs4 import BeautifulSoup
 import re
+import itertools
 
 games = ['R6', 'R6', 'R6', 'RL', 'RL', 'RL', 'Apex']
 forgiveQuotes = ["The weak can never forgive. Forgiveness is the attribute of the strong.",
@@ -115,11 +116,18 @@ def getSteamStatus(bot, update):
 
     response = requests.request("GET", url, data=payload, headers=headers, params=querystring)
     data = response.json()
-    output = "GG\n"
+    gamePlayers = []
     for player in data['response']['players']:
         game = player.setdefault('gameextrainfo',"")
         if(game != ""):
-            output+=steamIDS[player['steamid']]+ " GG "+player['gameextrainfo']+"\n"
+            gamePlayers.append((player['gameextrainfo'],steamIDS[player['steamid']]))
+
+    output = "GG\n"
+    it = itertools.groupby(l, operator.itemgetter(0))
+        for key, subiter in it:
+            output+="**"+key+"**"
+            for item in subiter:
+                output+="└"+item+"\n"
     update.effective_message.reply_text(output)
 
 
