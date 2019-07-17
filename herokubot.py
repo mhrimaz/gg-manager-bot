@@ -128,7 +128,7 @@ def getSteamStatus(bot, update):
     for key, subiter in it:
         output+="**"+key+"** \n"
         for item in subiter:
-            output+="└"+item[1]+"\n"
+            output+=" ├ "+item[1]+"\n"
     update.effective_message.reply_text(output)
 
 
