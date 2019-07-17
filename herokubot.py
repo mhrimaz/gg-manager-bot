@@ -124,10 +124,10 @@ def getSteamStatus(bot, update):
 
     output = "GG\n"
     it = itertools.groupby(l, operator.itemgetter(0))
-        for key, subiter in it:
-            output+="**"+key+"**"
-            for item in subiter:
-                output+="└"+item+"\n"
+    for key, subiter in it:
+        output+="**"+key+"**"
+        for item in subiter:
+            output+="└"+item+"\n"
     update.effective_message.reply_text(output)
 
 
