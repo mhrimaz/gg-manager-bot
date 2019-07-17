@@ -5,7 +5,7 @@ import datetime
 import time
 from language_detector import LanguageDetector
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, BaseFilter
-from telegram import Message, User, Chat, MessageEntity, Document, ChatMember
+from telegram import Message, User, Chat, MessageEntity, Document, ChatMember, ParseMode
 from random import randint
 import nltk
 import pymongo
@@ -16,6 +16,7 @@ from bs4 import BeautifulSoup
 import re
 import itertools
 import operator
+from mwt import MWT
 
 games = ['R6', 'R6', 'R6', 'RL', 'RL', 'RL', 'Apex']
 forgiveQuotes = ["The weak can never forgive. Forgiveness is the attribute of the strong.",
@@ -129,7 +130,7 @@ def getSteamStatus(bot, update):
         output+="**"+key+"** \n"
         for item in subiter:
             output+=" ├ "+item[1]+"\n"
-    bot.send_message(chat_id=update.effective_message.chat.id,text=output,parse_mode=telegram.ParseMode.MARKDOWN)
+    bot.send_message(chat_id=update.effective_message.chat.id,text=output,parse_mode=ParseMode.MARKDOWN)
     
 
 
