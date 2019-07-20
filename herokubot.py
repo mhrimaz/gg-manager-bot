@@ -357,6 +357,7 @@ def error(bot, update, error):
 BOT = None
 
 @timeloop.job(interval=timedelta(seconds=2))
+
 def sample_job_every_2s():
     global BOT
 
@@ -365,7 +366,6 @@ def sample_job_every_2s():
 
 
 if __name__ == "__main__":
-    global BOT
 
     nltk.download('stopwords')
     # Set these variable to the appropriate values
