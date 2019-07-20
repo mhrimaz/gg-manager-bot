@@ -17,6 +17,11 @@ import re
 import itertools
 import operator
 from mwt import MWT
+import time
+from timeloop import Timeloop
+from datetime import timedelta
+
+timeloop = Timeloop()
 
 games = ['R6', 'R6', 'R6', 'RL', 'RL', 'RL', 'Apex']
 forgiveQuotes = ["The weak can never forgive. Forgiveness is the attribute of the strong.",
@@ -349,7 +354,19 @@ def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"', update, error)
 
 
+BOT = None
+
+@timeloop.job(interval=timedelta(seconds=2))
+def sample_job_every_2s():
+    global BOT
+
+    BOT.set_chat_description(GROUP_ID,"2s job current time : {}".format(time.ctime()))
+
+
+
 if __name__ == "__main__":
+    global BOT
+
     nltk.download('stopwords')
     # Set these variable to the appropriate values
     TOKEN = os.environ.get('TOKEN')
@@ -366,6 +383,7 @@ if __name__ == "__main__":
     # Set up the Updater
     updater = Updater(TOKEN)
     dp = updater.dispatcher
+    BOT = updater.bot
     # Add handlers
     dp.add_handler(CommandHandler('start', start), 3)
     dp.add_handler(CommandHandler('roll', roll), 3)
@@ -384,5 +402,5 @@ if __name__ == "__main__":
     # Start the webhook
     updater.start_webhook(listen="0.0.0.0", port=int(PORT), url_path=TOKEN)
     updater.bot.setWebhook("https://{}.herokuapp.com/{}".format(NAME, TOKEN))
-
+    timeloop.start(block=True)
     updater.idle()
