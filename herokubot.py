@@ -104,9 +104,8 @@ def getBanStatus():
             result+=str(users[key])+" : "+str(value)+"\n"
     return result
 
-def getSteamStatus(bot, update):
-
-    url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"
+def getOnlineGamers():
+        url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"
     steamIDS = {}
     for item in STEAM_IDS.split("#"):
         if ":" in item:
@@ -132,9 +131,15 @@ def getSteamStatus(bot, update):
     output = "GG\n"
     it = itertools.groupby(gamePlayers, operator.itemgetter(0))
     for key, subiter in it:
-        output+="**"+key+"** \n"
+        output+=key+"\n"
         for item in subiter:
             output+=" ├ "+item[1]+"\n"
+    return output
+
+
+def getSteamStatus(bot, update):
+    output = getOnlineGamers()
+
     bot.send_message(chat_id=update.effective_message.chat.id,text=output,parse_mode=ParseMode.MARKDOWN)
     
 
@@ -356,12 +361,12 @@ def error(bot, update, error):
 
 BOT = None
 
-@timeloop.job(interval=timedelta(seconds=2))
+@timeloop.job(interval=timedelta(seconds=60))
 
 def sample_job_every_2s():
     global BOT
-
-    BOT.set_chat_description(GROUP_ID,"2s job current time : {}".format(time.ctime()))
+    output = getOnlineGamers()
+    BOT.set_chat_description(GROUP_ID,output+"\nTime : {}".format(time.ctime()))
 
 
 
