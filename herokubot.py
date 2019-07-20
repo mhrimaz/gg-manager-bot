@@ -105,7 +105,7 @@ def getBanStatus():
     return result
 
 def getOnlineGamers():
-        url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"
+    url = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/"
     steamIDS = {}
     for item in STEAM_IDS.split("#"):
         if ":" in item:
