@@ -78,7 +78,7 @@ try:
     client = pymongo.MongoClient(
         "mongodb+srv://gg-manager-bot-app:" + os.environ.get("GG_API_KEY") +
         "@cluster0-01zqv.mongodb.net/?retryWrites=true")
-    fingMessages = client['gg-manager-bot']['fing-messages']
+    mongoMessages = client['gg-manager-bot']['messages']
     GIFS = getAllGifs(GIF_SOURCE)
     GIFSX = getAllGifs(GIF_SOURCEX)
 except Exception as ex:
@@ -248,20 +248,19 @@ def processText(bot, update):
 
     user = update.effective_user
     userID = user.id
+    try:
+        mongoMessages.insert([{
+            'uid': userID,
+            'time': datetime.now(),
+            'message': update.effective_message.text
+        }])
+    except NameError:
+        pass
     if(userID in admins):
         return
 
     if isPhinglish(update.effective_message.text):
         englishCount[userID] = englishCount.setdefault(userID, 0) + 1
-        try:
-            fingMessages.insert([{
-                'uid': userID,
-                'username': user.name,
-                'time': datetime.now(),
-                'message': update.effective_message.text
-            }])
-        except NameError:
-            pass
     else:
         return
 
