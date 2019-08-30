@@ -51,7 +51,7 @@ STEAM_IDS = os.environ.get('STEAM_IDS')
 GIFS = []
 GIFSX = []
 STICKER_LIMIT = 5
-PHINGLISH_LIMIT = 10
+PHINGLISH_LIMIT = 6
 TIME_WINDOW = 5
 
 def getAllGifs(gifSourceURL):
