@@ -368,7 +368,7 @@ def sample_job_every_2s():
     global BOT
     output = getOnlineGamers()
     
-    finland = timezone('Europe/Finland')
+    finland = timezone('Europe/Helsinki')
     tehran = timezone('Asia/Tehran')
     virginia = timezone('US/Eastern')
     finland_time = datetime.now(finland)
