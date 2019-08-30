@@ -3,6 +3,8 @@ import os
 import random
 import datetime
 import time
+import pytz
+from pytz import timezone
 from language_detector import LanguageDetector
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, BaseFilter
 from telegram import Message, User, Chat, MessageEntity, Document, ChatMember, ParseMode
@@ -365,7 +367,18 @@ BOT = None
 def sample_job_every_2s():
     global BOT
     output = getOnlineGamers()
-    BOT.set_chat_description(GROUP_ID,output+"\nTime : {}".format(time.ctime()))
+    
+    finland = timezone('Europe/Finland')
+    tehran = timezone('Asia/Tehran')
+    virginia = timezone('US/Eastern')
+    finland_time = datetime.now(finland)
+    tehran_time = datetime.now(tehran)
+    virginia_time = datetime.now(virginia)
+
+    output += "\nTehran   Time : {}".format(tehran_time.strftime('%H-%M-%S'))
+    output += "\nFinland  Time : {}".format(finland_time.strftime('%H-%M-%S'))
+    output += "\nVirginia Time : {}".format(virginia_time.strftime('%H-%M-%S'))
+    BOT.set_chat_description(GROUP_ID,output)
 
 
 
