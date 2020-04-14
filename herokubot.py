@@ -371,13 +371,16 @@ def sample_job_every_2s():
     finland = timezone('Europe/Helsinki')
     tehran = timezone('Asia/Tehran')
     virginia = timezone('US/Eastern')
+    berlin = timezone('Europe/Berlin')
     finland_time = datetime.now(finland)
     tehran_time = datetime.now(tehran)
     virginia_time = datetime.now(virginia)
+    germany_time = datetime.now(berlin)
 
     output += "\nTehran   Time : {}".format(tehran_time.strftime('%H:%M:%S'))
     output += "\nFinland  Time : {}".format(finland_time.strftime('%H:%M:%S'))
     output += "\nVirginia Time : {}".format(virginia_time.strftime('%H:%M:%S'))
+    output += "\nVirginia Time : {}".format(germany_time.strftime('%H:%M:%S'))
     BOT.set_chat_description(GROUP_ID,output)
 
 
