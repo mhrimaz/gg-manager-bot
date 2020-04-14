@@ -380,7 +380,7 @@ def sample_job_every_2s():
     output += "\nTehran   Time : {}".format(tehran_time.strftime('%H:%M:%S'))
     output += "\nFinland  Time : {}".format(finland_time.strftime('%H:%M:%S'))
     output += "\nVirginia Time : {}".format(virginia_time.strftime('%H:%M:%S'))
-    output += "\nVirginia Time : {}".format(germany_time.strftime('%H:%M:%S'))
+    output += "\nGermany Time : {}".format(germany_time.strftime('%H:%M:%S'))
     BOT.set_chat_description(GROUP_ID,output)
 
 
