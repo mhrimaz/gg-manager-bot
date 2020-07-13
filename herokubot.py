@@ -31,6 +31,7 @@ forgiveQuotes = ["The weak can never forgive. Forgiveness is the attribute of th
                  "Forgiveness is not an occasional act, it is a constant attitude.",
                  "There is no love without forgiveness, and there is no forgiveness without love.",
                  "Mistakes are always forgivable, if one has the courage to admit them."]
+blocklist_id = ['AgADrgEAApm6gQk']
 stickerCount = {}
 englishCount = {}
 msgCount = {}
@@ -316,12 +317,18 @@ def antiFlood(bot, update):
 
     print("All Filter update "+str(update))
 
-        
+    AgADrgEAApm6gQk    
     user = update.effective_user
     userID = user.id
     users[user.id] = user.username
     users[user.username] = user.id
-
+    try:
+      if update.effective_message.voice.file_unique_id in blocklist_id:
+        bot.delete_message(update.effective_message.chat.id,
+                             update.effective_message.message_id)
+    except:
+      print('err')
+      
     if update.effective_message.chat.type == 'private':
         if user.username == GOD:
             if(update.effective_message.text.startswith('http')):
@@ -330,7 +337,7 @@ def antiFlood(bot, update):
             elif not update.effective_message.text.startswith('/'):
                 bot.send_message(chat_id=GROUP_ID, text=update.effective_message.text)
 
-
+    
     if(userID in admins):
         return
     msgCount[userID] = msgCount.setdefault(userID, 0) + 1
