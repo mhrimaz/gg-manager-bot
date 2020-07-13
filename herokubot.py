@@ -31,7 +31,7 @@ forgiveQuotes = ["The weak can never forgive. Forgiveness is the attribute of th
                  "Forgiveness is not an occasional act, it is a constant attitude.",
                  "There is no love without forgiveness, and there is no forgiveness without love.",
                  "Mistakes are always forgivable, if one has the courage to admit them."]
-blocklist_id = ['AgADrgEAApm6gQk']
+blocklist_id = set(['AgADrgEAApm6gQk'])
 stickerCount = {}
 englishCount = {}
 msgCount = {}
@@ -317,7 +317,7 @@ def antiFlood(bot, update):
 
     print("All Filter update "+str(update))
 
-    AgADrgEAApm6gQk    
+        
     user = update.effective_user
     userID = user.id
     users[user.id] = user.username
