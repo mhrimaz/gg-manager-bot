@@ -323,11 +323,11 @@ def antiFlood(bot, update):
     users[user.id] = user.username
     users[user.username] = user.id
     try:
-      if update.effective_message.voice.file_unique_id in blocklist_id:
+      if update.effective_message.voice.file_unique_id.text in blocklist_id:
         bot.delete_message(update.effective_message.chat.id,
                              update.effective_message.message_id)
     except:
-      print('err')
+      pass
       
     if update.effective_message.chat.type == 'private':
         if user.username == GOD:
